@@ -1,5 +1,5 @@
 <?php
-function display_in_table($rows, $columnNames, $numColumns, $filterKeys,$delete_url,$edit_url){
+function display_in_table($rows, $columnNames, $numColumns, $filterKeys, $delete_url, $edit_url){
     echo "<table class='table'>";
     echo "<thead class='thead-dark'>";
     echo "<tr>";
@@ -13,8 +13,8 @@ function display_in_table($rows, $columnNames, $numColumns, $filterKeys,$delete_
     foreach ($rows as $row){
         echo "<tr>";
         $id = $row['id'];
-        $delete_url = "{$delete_url}?id={$id}";
-        $edit_url = "{$edit_url}?id={$id}";
+        $delete_url_temp = "{$delete_url}?id={$id}&action=delete";
+        $edit_url_temp = "{$edit_url}?id={$id}&action=edit";
         
         foreach ($row as $key => $value){
             if (!in_array($key, $filterKeys)) {
@@ -25,8 +25,8 @@ function display_in_table($rows, $columnNames, $numColumns, $filterKeys,$delete_
                 }
             }
         }
-        echo "<td><a href='{$edit_url}' class='btn btn-warning'>Edit</a></td>";
-        echo "<td><a href='{$delete_url}' class='btn btn-danger'>Delete</a></td>";
+        echo "<td><a href='{$edit_url_temp}' class='btn btn-warning'>Edit</a></td>";
+        echo "<td><a href='{$delete_url_temp}' class='btn btn-danger'>Delete</a></td>";
         echo "</tr>";
     }
 
