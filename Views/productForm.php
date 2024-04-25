@@ -1,3 +1,19 @@
+<?php
+include "../Controllers/category.php";
+include "base.php";
+
+if(isset($_GET['errors'])){
+    $errors = json_decode($_GET["errors"], true);
+}
+
+if(isset($_GET['old_data'])){
+    $old_data = json_decode($_GET["old_data"], true);
+}
+
+$categories = selectCategories();
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -40,31 +56,37 @@
   <div class="bg-image"></div>
   <div class="form-container">
     <h2>Product Form</h2>
-    <form action="../Controllers/productForm.php" method="post" enctype="multipart/form-data">
+    <form action="../validation/productFormValidation.php" method="post" enctype="multipart/form-data">
       <div class="form-group ">
         <label for="productName">Product:</label>
         <input type="text" class="form-control" id="productName" placeholder="Enter product name" name="name">
+        <?php if (!empty($errors['name'])) echo "<div class='text-danger'>{$errors['name']}</div>"; ?>
       </div>
       <div class="form-group">
         <label for="quantity">Price:</label>
-        <input type="number" id="quantity" name="quantity" min="1" max="5">
+        <input type="text" id="quantity" name="price" >
       </div>
      <div class="form-group row">
         <label for="productCategory" class="col-sm-3 col-form-label">Category:</label>
         <div class="col-sm-7">
             <select class="form-control" id="productCategory" name="category">
-            <option value="category1">Category 1</option>
-            <option value="category2">Category 2</option>
-            <option value="category3">Category 3</option>
+              <?php foreach ($categories as $category): ?>
+                  <option value="<?php echo $category['id']; ?>"><?php echo $category['name']; ?></option>
+              <?php endforeach; ?>
             </select>
         </div>
         <div class="col-sm-2">
            <a href="#" class="btn btn-info btn-sm">Add Category</a>
         </div>
     </div>
+    <div class="form-group">
+        <label for="quantity">Stock:</label>
+        <input type="number" id="quantity" name="stock" min="0">
+    </div>
       <div class="form-group">
         <label for="productImage">Product Picture:</label>
-        <input type="file" class="form-control-file" id="productImage" name="profile">
+        <input type="file" class="form-control-file" id="productImage" name="image">
+        <?php if (!empty($errors['image'])) echo "<div class='text-danger'>{$errors['image']}</div>"; ?>
       </div>
       <button type="submit" class="btn btn-primary">Save</button>
       <button type="reset" class="btn btn-secondary">Reset</button>
