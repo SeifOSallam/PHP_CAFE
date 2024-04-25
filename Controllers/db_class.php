@@ -149,10 +149,54 @@ class Database {
             return "Error";
         }
     }
+    
+
+    public function getProductsWithPage($page)
+    {
+    $database = Database::getInstance();
+
+    $query = 'SELECT p.id , p.image , p.name , c.name as category , p.price 
+            FROM products p
+            INNER JOIN categories c 
+            ON p.category_id = c.id
+            limit 6
+            OFFSET '.(($page-1)*6).'
+            ;';
+
+            $stmt = $this->connection->prepare($query);
+            try
+            {
+                $stmt->execute();
+                $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                return $res;
+            }
+            catch (PDOException $e)
+            {
+                echo $e->getMessage();
+            }
+    
+    }
+
+    public function getCount($table)
+    {
+        $query="SELECT COUNT(*) FROM $table";
+        $stmt = $this->connection->prepare($query);
+        try
+        {
+        $stmt -> execute();
+        $res = $stmt->fetch();
+        return $res;
+        }
+        catch(PDOException $e)
+        {
+            echo $e->getMessage();
+        }
+
+    }
+
     public function __destruct() {
         $this->connection = null;
     }
-
 }
 
 $database = Database::getInstance();
