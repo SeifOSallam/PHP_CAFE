@@ -21,6 +21,7 @@ $categories = selectCategories();
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Product Form</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  
   <style>
     .container {
       position: relative;
@@ -47,6 +48,15 @@ $categories = selectCategories();
       height: 100%;
       z-index: -1;
       filter: blur(5px); 
+    }
+    .modal-dialog.modal-dialog-centered {
+        display: flex;
+        align-items: center;
+        min-height: calc(100% - 3.5rem); 
+    }
+
+    .modal-content {
+        margin: auto;
     }
   </style>
 </head>
@@ -76,8 +86,8 @@ $categories = selectCategories();
             </select>
         </div>
         <div class="col-sm-2">
-           <a href="#" class="btn btn-info btn-sm">Add Category</a>
-        </div>
+          <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#addCategoryModal">Add Category</button>
+       </div>
     </div>
     <div class="form-group">
         <label for="quantity">Stock:</label>
@@ -93,8 +103,34 @@ $categories = selectCategories();
     </form>
   </div>
 </div>
+<div class="modal fade" id="addCategoryModal" tabindex="-1" role="dialog" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addCategoryModalLabel">Add Category</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addCategoryForm" action="../validation/category.php" method="post">
+                    <div class="form-group">
+                        <label for="categoryName">Category Name:</label>
+                        <input type="text" class="form-control" id="categoryName" name="categoryName">
+                        <?php if (!empty($errors['category'])): ?>
+                            <div class="text-danger"><?php echo $errors['category']; ?></div>
+                        <?php endif; ?>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add</button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
 
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

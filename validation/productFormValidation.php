@@ -53,7 +53,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $category_id = $_POST['category'];
         $price = $_POST['price'];
         insertProduct($name, $price , $category_id ,$stock,$filename);
-        header("Location: ../Views/productForm.php?errors={$errors}");
+        header("Location: ../Views/home.php");
     }
 } else {
         echo "Invalid request method.";

@@ -49,7 +49,6 @@ class Database {
         try {
             $statement->execute();
             $result = $statement->fetchAll(PDO::FETCH_ASSOC);
-
             if (count($result) > 0) {
                 return $result;
             } else {

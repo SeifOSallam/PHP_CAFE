@@ -11,5 +11,9 @@ function insertProduct($name,$price,$category_id,$stock,$image){
     $database->insert("products","category_id,name,price,stock,image", "'$category_id','$name','$price','$stock','$image'");
 }
 
+function selectProduct(){
+    global $database;
+    return $database->select("products");
+}
 
 ?>
