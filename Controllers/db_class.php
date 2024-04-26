@@ -49,7 +49,6 @@ class Database {
         try {
             $statement->execute();
             $result = $statement->fetchAll(PDO::FETCH_ASSOC);
-
             if (count($result) > 0) {
                 return $result;
             } else {
@@ -149,7 +148,23 @@ class Database {
             return "Error";
         }
     }
-    
+    public function getProductById($id)
+    {
+        $query = "SELECT * FROM products WHERE id = :id";
+        $statement = $this->connection->prepare($query);
+        $statement->bindParam(':id',$id);
+
+        try
+        {
+            $statement->execute();
+            $product = $statement->fetchAll(PDO::FETCH_ASSOC);
+            return $product;
+        }   
+        catch (PDOException)
+        {
+            return "Error";
+        }
+    }
 
     public function getProductsWithPage($page)
     {
@@ -203,6 +218,7 @@ $database = Database::getInstance();
 
 $database->connect(DB_HOST,DB_USER,DB_PASSWORD,DB_NAME);
 
+// var_dump($database->getProductById(1));
 // $database->select(DB_TABLE);
 
 // $database->insert(DB_TABLE,"name,password,email,room_number", "'Mohamed','123','Mohamed@gmail.com','Application1'");
