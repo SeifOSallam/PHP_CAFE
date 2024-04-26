@@ -29,7 +29,7 @@ function getOneProduct($id){
     return $database->getProductById($id);
 }
 
-if(!empty($_GET['id'])){
+if(!empty($_GET['id']) && ($_GET['action']=="delete")){
     $std_id = $_GET['id'];
     deleteProduct($std_id);
     header("Location: ../Views/showProducts.php");

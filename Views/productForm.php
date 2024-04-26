@@ -12,7 +12,6 @@ if(isset($_GET['old_data'])){
 }
 if(isset($_GET['action']) && $_GET['action']="edit"){
   $product = getOneProduct($_GET['id']) ;
-  
 }
 $categories = selectCategories();
 
@@ -138,6 +137,7 @@ $categories = selectCategories();
                             <div class="text-danger"><?php echo $errors['category']; ?></div>
                         <?php endif; ?>
                     </div>
+                    
                     <button type="submit" class="btn btn-primary">Add</button>
                 </form>
             </div>
