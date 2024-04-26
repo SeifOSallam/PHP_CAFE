@@ -2,6 +2,8 @@
 include "../Controllers/category.php";
 include "../Controllers/product.php";
 include "../Views/base.php";
+include "../Controllers/product.php";
+include "../Views/base.php";
 
 if(isset($_GET['errors'])){
     $errors = json_decode($_GET["errors"], true);
@@ -9,6 +11,10 @@ if(isset($_GET['errors'])){
 
 if(isset($_GET['old_data'])){
     $old_data = json_decode($_GET["old_data"], true);
+}
+if(isset($_GET['action']) && $_GET['action']="edit"){
+  $product = getOneProduct($_GET['id']) ;
+  
 }
 if(isset($_GET['action']) && $_GET['action']="edit"){
   $product = getOneProduct($_GET['id']) ;
@@ -26,8 +32,11 @@ $categories = selectCategories();
   <title>Product Form</title>
  
   <style>
+
     .container {
       position: relative;
+      margin-top: 90px; 
+      height: 100vh;
       margin-top: 90px; 
       height: 100vh;
     }
@@ -66,6 +75,7 @@ $categories = selectCategories();
 </head>
 <body>
 <?php require '../Components/navbar.php';?>
+<?php require '../Components/navbar.php';?>
 <div class="container">
   <div class="bg-image"></div>
   <div class="form-container">
@@ -75,9 +85,12 @@ $categories = selectCategories();
         <label for="productName">Product:</label>
         <input type="text" class="form-control" id="productName" placeholder="Enter product name" name="name" <?php if(!empty($product)){echo 'value="'.$product[0]["name"].'"';}?>>
         <?php if (!empty($errors['name'])) echo "<div class='text-danger'>{$errors['name']}</div>"; ?> 
+        <input type="text" class="form-control" id="productName" placeholder="Enter product name" name="name" <?php if(!empty($product)){echo 'value="'.$product[0]["name"].'"';}?>>
+        <?php if (!empty($errors['name'])) echo "<div class='text-danger'>{$errors['name']}</div>"; ?> 
       </div>
       <div class="form-group">
         <label for="quantity">Price:</label>
+        <input type="text" id="quantity" name="price" <?php if(!empty($product)){echo 'value="'.$product[0]["price"].'"';}?>>
         <input type="text" id="quantity" name="price" <?php if(!empty($product)){echo 'value="'.$product[0]["price"].'"';}?>>
       </div>
      <div class="form-group row">
@@ -88,7 +101,14 @@ $categories = selectCategories();
               <?php if (!empty($product) && $category['id'] == $product[0]['category_id']): ?>
                   <option value="<?php echo $category['id']; ?>" selected><?php echo $category['name']; ?></option>
               <?php else: ?>
+            <select class="form-control" id="productCategory" name="category" <?php if(!empty($product)){echo 'default="'.$product[0]["price"].'"';}?>default=>
+            <?php foreach ($categories as $category): ?>
+              <?php if (!empty($product) && $category['id'] == $product[0]['category_id']): ?>
+                  <option value="<?php echo $category['id']; ?>" selected><?php echo $category['name']; ?></option>
+              <?php else: ?>
                   <option value="<?php echo $category['id']; ?>"><?php echo $category['name']; ?></option>
+              <?php endif; ?>
+           <?php endforeach; ?>
               <?php endif; ?>
            <?php endforeach; ?>
             </select>
@@ -100,6 +120,7 @@ $categories = selectCategories();
     <div class="form-group">
         <label for="quantity">Stock:</label>
         <input type="number" id="quantity" name="stock" min="0" <?php if(!empty($product)){echo 'value="'.$product[0]["stock"].'"';}?>>
+        <input type="number" id="quantity" name="stock" min="0" <?php if(!empty($product)){echo 'value="'.$product[0]["stock"].'"';}?>>
     </div>
       <div class="form-group">
         <label for="productImage">Product Picture:</label>
@@ -108,10 +129,19 @@ $categories = selectCategories();
           <input type="hidden" id="hiddenImageName" name="hiddenImage" value="<?php echo $product[0]["image"]; ?>">
         <?php endif; ?>
         <input type="file" class="form-control-file" id="productImage" name="image" onchange="displayFileName(this)" >
+        <?php if (!empty($product)): ?>
+          <p id="image"><?php echo $product[0]["image"]; ?></p>
+          <input type="hidden" id="hiddenImageName" name="hiddenImage" value="<?php echo $product[0]["image"]; ?>">
+        <?php endif; ?>
+        <input type="file" class="form-control-file" id="productImage" name="image" onchange="displayFileName(this)" >
         <?php if (!empty($errors['image'])) echo "<div class='text-danger'>{$errors['image']}</div>"; ?>
       </div>
       <button type="submit" class="btn btn-primary"> <?php if(!empty($product)){echo "Edit";}else {echo "Save";} ?></button>
+      <button type="submit" class="btn btn-primary"> <?php if(!empty($product)){echo "Edit";}else {echo "Save";} ?></button>
       <button type="reset" class="btn btn-secondary">Reset</button>
+      <?php if (!empty($product)): ?>
+        <input type="hidden" id="hiddenImageName" name="id" value="<?php echo $product[0]["id"]; ?>">
+    <?php endif; ?>
       <?php if (!empty($product)): ?>
         <input type="hidden" id="hiddenImageName" name="id" value="<?php echo $product[0]["id"]; ?>">
     <?php endif; ?>

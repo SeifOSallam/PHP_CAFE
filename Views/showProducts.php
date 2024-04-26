@@ -22,11 +22,12 @@ $columnNames = array('Product', 'Price', 'Image');
       justify-content: center;
       align-items: center;
       height: 90vh;
+      height: 90vh;
     }
   </style>
 </head>
 <body>
-
+    
 <?php require '../Components/navbar.php';?>
 <div class="container-fluid center-content">
   <div class="container">
@@ -37,6 +38,7 @@ $columnNames = array('Product', 'Price', 'Image');
     <h2 class="text-center mb-4">All Products</h2> 
     <div class="table-responsive">
       <?php
+        display_in_table($products, $columnNames, 3, $filterKeys,"../Controllers/product.php","productForm.php");
         display_in_table($products, $columnNames, 3, $filterKeys,"../Controllers/product.php","productForm.php");
       ?>
     </div>
