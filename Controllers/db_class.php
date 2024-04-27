@@ -35,7 +35,7 @@ class Database {
 
         try {
             $statement->execute();
-            return true;
+            return $this->connection->lastInsertId();
         } catch (PDOException $e) {
             echo "Error inserting record: " . $e->getMessage();
             return false;
@@ -209,11 +209,11 @@ class Database {
         }
     }
 
-    public function getUserCartItems($user_id)
+    public function getUserItems($table,$user_id)
     {
         $user_id = (int)$user_id;
 
-        $query = "SELECT * FROM cart c 
+        $query = "SELECT * FROM $table c 
         INNER JOIN products p 
         ON c.product_id = p.id
         WHERE c.user_id = $user_id";
@@ -247,10 +247,12 @@ class Database {
         }
     }
 
-    public function deleteItem($table, $id) {
-        $query = "DELETE FROM $table WHERE product_id = :id";
+    public function deleteItem($table, $product_id , $user_id) {
+        echo "table {$table} product {$product_id}  user {$user_id}";
+        $query = "DELETE FROM $table WHERE product_id = :id AND user_id = :user_id";
         $statement = $this->connection->prepare($query);
-        $statement->bindParam(':id', $id, PDO::PARAM_INT);
+        $statement->bindParam(':id', $product_id, PDO::PARAM_INT);
+        $statement->bindParam(':user_id', $user_id, PDO::PARAM_INT);
 
         try {
             $statement->execute();
@@ -261,6 +263,7 @@ class Database {
             return false;
         }
     }
+
 
     public function __destruct() {
         $this->connection = null;
