@@ -63,7 +63,6 @@ class Database {
         $query = "UPDATE $table SET $fields WHERE id = :id";
         $statement = $this->connection->prepare($query);
         $statement->bindParam(':id', $id, PDO::PARAM_INT);
-        var_dump($statement);
         try {
             $statement->execute();
             return true;
@@ -208,9 +207,55 @@ class Database {
         }
 
     }
-
+    public function getOrdersForUser($userId)
+    {
+        $database = Database::getInstance();
+        $query = 'SELECT o.id AS order_id, o.order_date, o.total_amount, o.notes, o.room_id, o.status, oi.quantity, p.name AS product_name, p.price AS product_price, p.image as image 
+                  FROM orders o 
+                  JOIN order_items oi ON o.id = oi.order_id 
+                  JOIN products p ON oi.product_id = p.id 
+                  WHERE o.user_id = :userId';
+        
+        $stmt = $this->connection->prepare($query);
+        $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
+    
+        try {
+            $stmt->execute();
+            $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $res;
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+            return false; // Handle the error as needed
+        }
+    }
     public function __destruct() {
         $this->connection = null;
+    }
+
+    public function getOrdersForUserDate($userId, $startDate, $endDate)
+    {
+    $database = Database::getInstance();
+    $query = 'SELECT o.id AS order_id, o.order_date, o.total_amount, o.notes, o.room_id, o.status, oi.quantity, p.name AS product_name, p.price AS product_price, p.image as image 
+              FROM orders o 
+              JOIN order_items oi ON o.id = oi.order_id 
+              JOIN products p ON oi.product_id = p.id 
+              WHERE o.user_id = :userId
+              AND o.order_date >= :startDate
+              AND o.order_date <= :endDate';
+    
+    $stmt = $this->connection->prepare($query);
+    $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
+    $stmt->bindParam(':startDate', $startDate, PDO::PARAM_STR);
+    $stmt->bindParam(':endDate', $endDate, PDO::PARAM_STR);
+
+    try {
+        $stmt->execute();
+        $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $res;
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+        return false; 
+    }
     }
 }
 
