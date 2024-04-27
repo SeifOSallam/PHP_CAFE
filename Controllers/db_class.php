@@ -228,25 +228,36 @@ class Database {
             return false; // Handle the error as needed
         }
     }
-    public function getChecks($page) {
+    public function getChecks($page, $filters) {
         $query = "SELECT users.username, orders.total_amount 
-        FROM orders, users WHERE orders.user_id = users.id 
-        limit 6
-        OFFSET ".(($page)*6)."
-        ;";
+                  FROM orders 
+                  INNER JOIN users ON orders.user_id = users.id";
+    
+        // Check if filters exist
+        $whereClause = "";
+        if (isset($filters['user'])) {
+            $whereClause .= " WHERE users.username = '{$filters['user']}'";
+        }
+        if (isset($filters['date_from'])) {
+            $whereClause .= ($whereClause ? " AND" : " WHERE") . " orders.order_date >= '{$filters['date_from']}'";
+        }
+        if (isset($filters['date_to'])) {
+            $whereClause .= ($whereClause ? " AND" : " WHERE") . " orders.order_date <= '{$filters['date_to']}'";
+        }
+    
+        $query .= $whereClause . " LIMIT 6 OFFSET " . (($page - 1) * 6);
+    
         $statement = $this->connection->prepare($query);
-
-        try
-        {
+    
+        try {
             $statement->execute();
             $checks = $statement->fetchAll(PDO::FETCH_ASSOC);
             return $checks;
-        }   
-        catch (PDOException)
-        {
-            return "Error";
+        } catch (PDOException $e) {
+            return "Error: " . $e->getMessage();
         }
     }
+    
 
     public function __destruct() {
         $this->connection = null;

@@ -6,8 +6,16 @@
 
     $database->connect(DB_HOST,DB_USER,DB_PASSWORD,DB_NAME);
 
-    function getChecks($page) {
+    function getChecks($page, $filters) {
         global $database;
-        return $database->getChecks($page);
+        return $database->getChecks($page, $filters);
+    }
+    function getUsers() {
+        global $database;
+        return $database->select('users');
+    }
+    function getOrdersCount() {
+        global $database;
+        return $database->getCount('orders');
     }
 ?>
