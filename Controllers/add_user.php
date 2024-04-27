@@ -2,7 +2,7 @@
 
 require_once '../db_connection.php';
 require_once '../db_info.php';
-require_once '../Controllers/db_class.php';
+require_once './db_class.php';
 
 $errors = [];
 
@@ -18,7 +18,7 @@ if (empty($_POST['email'])) {
 
 if (count($errors)) {
     $errors = json_encode($errors);
-    header("Location: form.php?errors={$errors}");
+    header("Location: ../Views/form.php?errors={$errors}");
     exit();
 }
 
@@ -60,7 +60,7 @@ if (empty($errors)) {
         $res = $database->insert(DB_TABLE, $columns, $values);
 
         if ($res) {
-            header("Location: admin_home.php");
+            header("Location: ../Views/admin_home.php");
             exit();
         } else {
             $errors['database'] = 'Failed to insert into database';
@@ -72,7 +72,7 @@ if (empty($errors)) {
 
 if (!empty($errors)) {
     $errors = json_encode($errors);
-    header("Location: form.php?errors={$errors}");
+    header("Location: ../Views/form.php?errors={$errors}");
     exit();
 }
 

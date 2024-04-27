@@ -1,4 +1,4 @@
-<?php
+ <?php
 require_once  '../db_info.php';
 
 $message = '';
@@ -111,7 +111,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <?php if (!empty($message)) : ?>
             <div class="message <?= strpos($message, 'successfully') !== false ? 'success' : '' ?>"><?= $message ?></div>
         <?php endif; ?>
-        <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+        <form method="post" action="../Controllers/reset_password.php">
             <div>
                 <label for="username">Username:</label>
                 <input type="text" name="username" required>

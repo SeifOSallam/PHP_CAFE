@@ -1,5 +1,5 @@
 <?php 
-require './utils.php';
+require '../Controllers/utils.php';
 require_once '../Controllers/db_class.php';
 ?>
 
@@ -19,8 +19,6 @@ require_once '../Controllers/db_class.php';
             margin-bottom: 20px;
             margin-left: 900px; 
         }
-
-       
         .container {
             margin: 0 auto;
             width: 80%; 
@@ -43,7 +41,7 @@ require_once '../Controllers/db_class.php';
 
     <script>
         function navigateToForm() {
-            window.location.href = 'form.php';
+            window.location.href = '../Views/form.php';
         }
     </script>
 </body>

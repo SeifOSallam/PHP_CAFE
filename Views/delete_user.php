@@ -1,6 +1,6 @@
 <?php
 require_once  '../db_connection.php';
-require_once './utils.php';
+require_once '../Controllers/utils.php';
 require_once '../db_info.php';
 require_once '../Controllers/db_class.php';
 
@@ -13,7 +13,7 @@ try{
 
     $res = $database->delete(DB_TABLE,$user_id);
 
-    header("Location:admin_home.php");
+    header("Location:../Views/admin_home.php");
     
 }catch(PDOException $e){
     echo $e->getMessage();

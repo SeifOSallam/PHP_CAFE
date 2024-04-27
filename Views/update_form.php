@@ -33,7 +33,7 @@ if (isset($_GET['old_data'])) {
 <body>
     <div class="container">
         <h2>Update User</h2>
-        <form method="POST" action=<?php echo "update_user.php?id={$user_id}";?> enctype="multipart/form-data">
+        <form method="POST" action=<?php echo "../Controllers/update_user.php?id={$user_id}";?> enctype="multipart/form-data">
             <div class="form-group">
                 <label for="username">Name</label>
                 <input type="text" class="form-control" id="username" name="username" value="<?php echo $old_data['username']; ?>">

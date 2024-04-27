@@ -16,7 +16,7 @@ $errors = isset($_GET['errors']) ? json_decode($_GET['errors']) : (object)[];
 <body>
     <div class="container">
         <h2>Add User</h2>
-        <form method="POST" action="add_user.php" enctype="multipart/form-data">
+        <form method="POST" action="../Controllers/add_user.php" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="username">Name</label>
                 <input type="text" class="form-control" id="username" name="username">

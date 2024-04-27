@@ -1,7 +1,7 @@
 <?php
 require_once  '../db_connection.php';
 require_once  '../db_info.php';
-require_once '../Controllers/db_class.php';
+require_once './db_class.php';
 
 $errors = [];
 
@@ -10,7 +10,6 @@ if(isset($_GET['id'])) {
 } else {
     $errors['id'] = 'User ID is missing';
 }
-
 if(empty($_POST['username'])) {
     $errors['username'] = 'Username is required';
 }
@@ -27,7 +26,7 @@ if (!isset($errors['email']) && !filter_var($_POST['email'], FILTER_VALIDATE_EMA
 if(count($errors)) {
     $errors = json_encode($errors);
     $old_data = json_encode($_POST);
-    header("Location:update_form.php?errors={$errors}&old_data={$old_data}");
+    header("Location:../Views/update_form.php?errors={$errors}&old_data={$old_data}");
     exit();
 }
 
@@ -65,10 +64,10 @@ try {
     $res = $database->update(DB_TABLE, $user_id, $updates);
 
     if($res) {
-        header("Location:admin_home.php");
+        header("Location:../Views/admin_home.php");
     }
 
 } catch(PDOException $e) {
-    header('Location:update_form.php');
+    header('Location:../Views/update_form.php');
 }
 ?>
