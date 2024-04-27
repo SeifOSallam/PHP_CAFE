@@ -2,7 +2,6 @@
 
 require_once '../Controllers/db_class.php';
 
-$database = Database::getInstance();
 
 if(isset($_GET['page']))
 {
@@ -14,6 +13,12 @@ if(!isset($_GET['page']))
     $products = $database->getProductsWithPage(1); 
 }
 
+
+$cartItems = $database->getUserItems('cart',1);
+
+$total= 0;
+
+$user_id = 1;
 ?>
 
 <!DOCTYPE html>
@@ -21,8 +26,11 @@ if(!isset($_GET['page']))
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <?php require 'base.php';
-    require '../Components/product_card.php';?>
+    <?php 
+    require 'base.php';
+    require '../Components/product_card.php';
+    require '../Components/cart_item.php'
+    ?>
     <link rel="stylesheet" href="../Components/style.css">
     <title>Document</title>
 
@@ -34,7 +42,45 @@ if(!isset($_GET['page']))
 <div class="wrapper row">
 
         <div class="col-4">
-        <h1 class='mt-5'>Order</h1>
+            <div class="row text-center">
+                <h1 class='mt-5 text-ceneter'>Orders</h1>
+                <?php
+                if(!$cartItems)
+                {
+                    echo '<h3 class="text-danger"> No products to be ordered </h3>';
+                }
+                foreach ($cartItems as $Item)
+                {
+                    $total += (float)$Item['price']*(int)$Item['quantity'];
+                    // user id needed here --------------------------------------------------------
+                    cart_item($user_id,$Item['product_id'],$Item['name'],$Item['price'],$Item['image'],$Item['quantity']);
+                }
+                ?>
+
+<div>
+    <!-- // user id needed here -------------------------------------------------------- -->
+    <?php
+                    echo '<form action="../Controllers/confirm_order.php?user_id='.$user_id.'&total='.$total.'" method="post">
+                    
+                    <input id="total" name="total"  value="       Toatal : '.$total.'" class="my-4" disabled />
+                    
+                    <label for="room_no">Room No:</label>
+                    <select id="room_no" name="room_no">
+                    <option value="1"> 1 </option>
+                    <option value="2"> 2 </option>
+                    <option value="3"> 3 </option>
+                    </select>
+                    
+                    <p>Notes</p>
+                    
+                    <textarea id="note" name="note" rows="4" cols="40" placeholder="Add note here"></textarea>
+
+
+                    <button type="submit" class="btn btn-primary">Confirm</button>
+                    </form>'
+                    ?>
+                </div>
+            </div>
         </div>
 
         <div class="col-8">
@@ -44,7 +90,7 @@ if(!isset($_GET['page']))
                     <?php 
                     foreach ($products as $product)
                     {
-                    product_card($product['image'],$product['name'],'Drinks',$product['price']);
+                    product_card(1,$product['id'],$product['image'],$product['name'],'Drinks',$product['price']);
                     }
                     ?>
                 </div>
