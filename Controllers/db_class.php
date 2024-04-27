@@ -119,7 +119,7 @@ class Database {
             if($statement->rowCount() == 1)
             {
                 echo "User found!";
-                return true;
+                return $statement->fetchAll(PDO::FETCH_ASSOC);
             }
             echo "User not found!";
             return false;
