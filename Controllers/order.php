@@ -6,18 +6,23 @@ $database = Database::getInstance();
 
 $database->connect(DB_HOST,DB_USER,DB_PASSWORD,DB_NAME);
 
-function getOrdersForUser($id){
+function getOrdersOnlyForUserWithPage($id,$page){
     global $database;
-    return $database->getOrdersForUser($id);
+    return $database->getOrdersOnlyForUserWithPage($id,$page);
 }
 
-function getOrdersForUserDate($userId, $startDate, $endDate){
+function getOrdersOnlyForUserDate($userId, $startDate, $endDate){
     global $database;
-    return $database->getOrdersForUserDate($userId, $startDate, $endDate);
+    return $database->getOrdersOnlyForUserDate($userId, $startDate, $endDate);
 }
+
 function CancelOrder($id){
     global $database;
     $database->update("orders", $id, "status='Cancelled'");
+}
+function getOrderDetailsByOrderId($orderId){
+    global $database;
+    return $database->getOrderDetailsByOrderId($orderId);
 }
 if (isset($_GET['cancelled'])) {
     $cancelledOrderId = $_GET['cancelled'];
@@ -25,5 +30,4 @@ if (isset($_GET['cancelled'])) {
     header("Location: ../Views/showOrders.php");
 }
 
-// getOrdersForUser("2");
 ?>
