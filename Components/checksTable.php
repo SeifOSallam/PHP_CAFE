@@ -18,7 +18,7 @@ function displayChecksTable($data, $users, $currentPage, $totalPages){
     "<form class='row'>
         <div class='col-lg-3 col-sm-6'>
             <select name='user' id='user' class='form-select'>
-                <option disabled selected>User</option>";
+                <option selected value=''>All</option>";
                 foreach($users as $user) {
                     echo "<option>{$user['username']}</option>";
                 }
