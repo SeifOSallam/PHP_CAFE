@@ -244,11 +244,11 @@ class Database {
         }
     }
 
-    public function getUserItems($user_id)
+    public function getUserItems($table,$user_id)
     {
         $user_id = (int)$user_id;
 
-        $query = "SELECT * FROM cart c 
+        $query = "SELECT * FROM $table c 
         INNER JOIN products p 
         ON c.product_id = p.id
         WHERE c.user_id = $user_id";
