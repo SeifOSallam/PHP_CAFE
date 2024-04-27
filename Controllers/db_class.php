@@ -209,6 +209,26 @@ class Database {
 
     }
 
+    public function getChecks($page) {
+        $query = "SELECT users.username, orders.total_amount 
+        FROM orders, users WHERE orders.user_id = users.id 
+        limit 6
+        OFFSET ".(($page)*6)."
+        ;";
+        $statement = $this->connection->prepare($query);
+
+        try
+        {
+            $statement->execute();
+            $checks = $statement->fetchAll(PDO::FETCH_ASSOC);
+            return $checks;
+        }   
+        catch (PDOException)
+        {
+            return "Error";
+        }
+    }
+
     public function __destruct() {
         $this->connection = null;
     }
