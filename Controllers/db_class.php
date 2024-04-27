@@ -35,7 +35,7 @@ class Database {
 
         try {
             $statement->execute();
-            return true;
+            return $this->connection->lastInsertId();
         } catch (PDOException $e) {
             echo "Error inserting record: " . $e->getMessage();
             return false;
@@ -49,6 +49,7 @@ class Database {
         try {
             $statement->execute();
             $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+
             if (count($result) > 0) {
                 return $result;
             } else {
@@ -120,7 +121,7 @@ class Database {
             if($statement->rowCount() == 1)
             {
                 echo "User found!";
-                return true;
+                return $statement->fetchAll(PDO::FETCH_ASSOC);
             }
             echo "User not found!";
             return false;
@@ -166,6 +167,30 @@ class Database {
         }
     }
 
+    public function getProductsWithPage($page)
+    {
+    $query = 'SELECT p.id , p.image , p.name , c.name as category , p.price 
+            FROM products p
+            INNER JOIN categories c 
+            ON p.category_id = c.id
+            limit 6
+            OFFSET '.(($page-1)*6).'
+            ;';
+
+            $stmt = $this->connection->prepare($query);
+            try
+            {
+                $stmt->execute();
+                $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                return $res;
+            }
+            catch (PDOException $e)
+            {
+                echo $e->getMessage();
+            }
+    
+    }
+
     public function getCount($table)
     {
         $query="SELECT COUNT(*) FROM $table";
@@ -182,6 +207,80 @@ class Database {
         }
 
     }
+    public function addToCart($user_id,$product_id,$product_price)
+    {
+        try
+        {
+            $query = "INSERT INTO cart (user_id,product_id,quantity,product_price) VALUES ($user_id,$product_id,1,$product_price)";
+            $stmt = $this->connection->prepare($query);
+            $stmt->execute();
+            echo "success !!";
+            return true;
+        }
+        catch (PDOException $e)
+        {
+            echo $e->getMessage();
+            return false;
+        }
+    }
+
+    public function getUserItems($table,$user_id)
+    {
+        $user_id = (int)$user_id;
+
+        $query = "SELECT * FROM $table c 
+        INNER JOIN products p 
+        ON c.product_id = p.id
+        WHERE c.user_id = $user_id";
+
+        $stmt = $this->connection->prepare($query);
+
+        try
+        {
+            $stmt->execute();
+            $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $res;
+        }
+        catch(PDOException $e)
+        {
+            echo $e->getMessage();
+            return null;
+        }
+    }
+
+    public function updateQty($table, $id, $fields) {
+        $query = "UPDATE $table SET $fields WHERE product_id = :id";
+        $statement = $this->connection->prepare($query);
+        $statement->bindParam(':id', $id, PDO::PARAM_INT);
+        var_dump($statement);
+        try {
+            $statement->execute();
+            return true;
+        } catch (PDOException $e) {
+            echo "Error updating record: " . $e->getMessage();
+            return false;
+        }
+    }
+
+    public function deleteItem($table, $product_id , $user_id) {
+        echo "table {$table} product {$product_id}  user {$user_id}";
+        $query = "DELETE FROM $table WHERE product_id = :id AND user_id = :user_id";
+        $statement = $this->connection->prepare($query);
+        $statement->bindParam(':id', $product_id, PDO::PARAM_INT);
+        $statement->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+
+        try {
+            $statement->execute();
+            echo "Record deleted successfully.";
+            return true;
+        } catch (PDOException $e) {
+            echo "Error deleting record: " . $e->getMessage();
+            return false;
+        }
+    }
+
+    
+
     public function __destruct() {
         $this->connection = null;
     }
@@ -262,6 +361,8 @@ class Database {
 $database = Database::getInstance();
 
 $database->connect(DB_HOST,DB_USER,DB_PASSWORD,DB_NAME);
+
+// $res = $database->getUserCartItems(1);
 
 // var_dump($database->getProductById(1));
 // $database->select(DB_TABLE);
