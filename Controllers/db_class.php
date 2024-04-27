@@ -226,7 +226,7 @@ class Database {
             echo $e->getMessage();
             return false; // Handle the error as needed
         }
-
+    }
     public function addToCart($user_id,$product_id,$product_price)
     {
         try
