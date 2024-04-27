@@ -64,6 +64,7 @@ class Database {
         $query = "UPDATE $table SET $fields WHERE id = :id";
         $statement = $this->connection->prepare($query);
         $statement->bindParam(':id', $id, PDO::PARAM_INT);
+
         try {
             $statement->execute();
             return true;
@@ -206,27 +207,6 @@ class Database {
         }
 
     }
-    public function getOrdersForUser($userId)
-    {
-        $database = Database::getInstance();
-        $query = 'SELECT o.id AS order_id, o.order_date, o.total_amount, o.notes, o.room_id, o.status, oi.quantity, p.name AS product_name, p.price AS product_price, p.image as image 
-                  FROM orders o 
-                  JOIN order_items oi ON o.id = oi.order_id 
-                  JOIN products p ON oi.product_id = p.id 
-                  WHERE o.user_id = :userId';
-        
-        $stmt = $this->connection->prepare($query);
-        $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
-    
-        try {
-            $stmt->execute();
-            $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            return $res;
-        } catch (PDOException $e) {
-            echo $e->getMessage();
-            return false; // Handle the error as needed
-        }
-    }
     public function addToCart($user_id,$product_id,$product_price)
     {
         try
@@ -304,32 +284,78 @@ class Database {
     public function __destruct() {
         $this->connection = null;
     }
+    public function getOrdersOnlyForUserDate($userId, $startDate, $endDate){ 
+        $database = Database::getInstance();
+        $query = 'SELECT id , order_date, total_amount, notes, room_id, status
+                FROM orders 
+                WHERE user_id = :userId
+                AND order_date >= :startDate
+                AND order_date <= :endDate';
+        
+        $stmt = $this->connection->prepare($query);
+        $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
+        $stmt->bindParam(':startDate', $startDate, PDO::PARAM_STR);
+        $stmt->bindParam(':endDate', $endDate, PDO::PARAM_STR);
 
-    public function getOrdersForUserDate($userId, $startDate, $endDate)
+        try {
+            $stmt->execute();
+            $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $res;
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+            return false; 
+        }
+    }
+
+    public function getOrdersOnlyForUserWithPage($userId, $page)
     {
-    $database = Database::getInstance();
-    $query = 'SELECT o.id AS order_id, o.order_date, o.total_amount, o.notes, o.room_id, o.status, oi.quantity, p.name AS product_name, p.price AS product_price, p.image as image 
-              FROM orders o 
-              JOIN order_items oi ON o.id = oi.order_id 
-              JOIN products p ON oi.product_id = p.id 
-              WHERE o.user_id = :userId
-              AND o.order_date >= :startDate
-              AND o.order_date <= :endDate';
+        $database = Database::getInstance();
+        $limit = 4;
+        $offset = ($page - 1) * $limit;
     
-    $stmt = $this->connection->prepare($query);
-    $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
-    $stmt->bindParam(':startDate', $startDate, PDO::PARAM_STR);
-    $stmt->bindParam(':endDate', $endDate, PDO::PARAM_STR);
+        $query = 'SELECT id , order_date, total_amount, notes, room_id, status
+                  FROM orders
+                  WHERE user_id = :userId
+                  LIMIT :limit
+                  OFFSET :offset';
+    
+        $stmt = $this->connection->prepare($query);
+        $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
+        $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+        $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+    
+        try {
+            $stmt->execute();
+            $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $res;
+        } catch (PDOException $e) {
+            // Log the error instead of echoing
+            error_log("Error fetching orders: " . $e->getMessage());
+            return false; 
+        }
+    }
+    public function getOrderDetailsByOrderId($orderId){
+        $database = Database::getInstance();
 
-    try {
-        $stmt->execute();
-        $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        return $res;
-    } catch (PDOException $e) {
-        echo $e->getMessage();
-        return false; 
-    }
-    }
+        $query = 'SELECT o.id AS order_id, o.order_date, o.total_amount, o.notes, o.room_id, o.status, oi.quantity, p.name AS product_name, p.price AS product_price, p.image as image 
+                FROM orders o 
+                JOIN order_items oi ON o.id = oi.order_id 
+                JOIN products p ON oi.product_id = p.id 
+                WHERE o.id = :orderId';
+
+        $stmt = $this->connection->prepare($query);
+        $stmt->bindParam(':orderId', $orderId, PDO::PARAM_INT);
+
+        try {
+            $stmt->execute();
+            $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $res;
+        } catch (PDOException $e) {
+
+            error_log("Error fetching order details: " . $e->getMessage());
+            return false; 
+        }
+     }
 }
 
 $database = Database::getInstance();
