@@ -1,5 +1,5 @@
-<?php 
-require '../Controllers/utils.php';
+<?php
+require_once '../Controllers/utils.php';
 require_once '../Controllers/db_class.php';
 ?>
 

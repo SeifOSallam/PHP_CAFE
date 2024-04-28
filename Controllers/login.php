@@ -20,6 +20,8 @@ try {
         $_SESSION['id'] = $user[0]['id'];
         $_SESSION['username'] = $user[0]['username'];
         $_SESSION['image'] = $user[0]['image'];
+        $_SESSION['role'] = $user[0]['role'];
+
         if ($user[0]['role'] == 'admin') {
             header('Location: ../Views/admin_home.php');
             exit(); 

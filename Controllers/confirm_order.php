@@ -2,6 +2,7 @@
 
 require_once 'db_class.php';
 
+
 $user_id = (int)$_GET['user_id'];
 $room_id = (int)$_POST['room_no'];
 $total_amount = (float)$_GET['total'];

@@ -63,7 +63,10 @@ if (isset($_POST['start_date']) && isset($_POST['end_date'])) {
     </style>
 </head>
 <body>
-<?php require '../Components/navbar.php';?>
+<?php require '../Components/navbar.php';
+      user_navbar($_SESSION['username'],$_SESSION['image']);
+?>
+
 <div class="container text-center container-margin-top"> 
     <form method="post" action="showOrders.php">
         <label for="start">From:</label>

@@ -1,7 +1,8 @@
 <?php
 
 require_once '../Controllers/db_class.php';
-
+require '../Components/navbar.php';
+session_start();
 
 if(isset($_GET['page']))
 {
@@ -13,12 +14,15 @@ if(!isset($_GET['page']))
     $products = $database->getProductsWithPage(1); 
 }
 
+$cartItems = $database->getUserItems('cart',$_SESSION['id']);
 
-$cartItems = $database->getUserItems('cart',1);
+$rooms = $database->select('rooms');
 
 $total= 0;
 
-$user_id = 1;
+$user_id = $_SESSION['id'];
+
+
 ?>
 
 <!DOCTYPE html>
@@ -37,10 +41,9 @@ $user_id = 1;
 </head>
 <body>
 
-<?php require '../Components/navbar.php';?>
+<?php user_navbar($_SESSION['username'],$_SESSION['image'],$_SESSION['role']) ?>
 
 <div class="wrapper row">
-
         <div class="col-4">
             <div class="row text-center">
                 <h1 class='mt-5 text-ceneter'>Orders</h1>
@@ -52,30 +55,28 @@ $user_id = 1;
                 foreach ($cartItems as $Item)
                 {
                     $total += (float)$Item['price']*(int)$Item['quantity'];
-                    // user id needed here --------------------------------------------------------
                     cart_item($user_id,$Item['product_id'],$Item['name'],$Item['price'],$Item['image'],$Item['quantity']);
                 }
                 ?>
 
 <div>
-    <!-- // user id needed here -------------------------------------------------------- -->
     <?php
                     echo '<form action="../Controllers/confirm_order.php?user_id='.$user_id.'&total='.$total.'" method="post">
                     
                     <input id="total" name="total"  value="       Toatal : '.$total.'" class="my-4" disabled />
                     
                     <label for="room_no">Room No:</label>
-                    <select id="room_no" name="room_no">
-                    <option value="1"> 1 </option>
-                    <option value="2"> 2 </option>
-                    <option value="3"> 3 </option>
+                    <select id="room_no" name="room_no">';
+
+                    foreach($rooms as $room)
+                    {
+                        echo'<option value="'.$room['id'].'">'.$room['room_number'].'</option>';
+                    }
+                    
+                    echo'
                     </select>
-                    
                     <p>Notes</p>
-                    
                     <textarea id="note" name="note" rows="4" cols="40" placeholder="Add note here"></textarea>
-
-
                     <button type="submit" class="btn btn-primary">Confirm</button>
                     </form>'
                     ?>
