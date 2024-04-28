@@ -1,5 +1,4 @@
 <?php
-require_once  '../db_connection.php';
 require_once  '../db_info.php';
 require_once './db_class.php';
 
@@ -47,7 +46,7 @@ try {
         if (!in_array($extension, $allowed)) {
             $errors['image'] = 'Wrong file format';
         } else {
-            $uploadDir = '../assets/images/';
+            $uploadDir = '../assets/images';
             $uploadedFilePath = $uploadDir . $filename;
             $saved = move_uploaded_file($tmp_name, $uploadedFilePath);
             if (!$saved) {
