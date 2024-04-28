@@ -1,22 +1,25 @@
 <?php 
 include "../Controllers/order.php";
-
+session_start();
+if(isset($_SESSION) && !is_null($_SESSION)){
+    $userID = $_SESSION['id'];
+}
 if (isset($_GET['cancelled'])) {
     $cancelledOrderId = $_GET['cancelled'];
     CancelOrder($cancelledOrderId);
 }
 
 if (isset($_POST['start_date']) && isset($_POST['end_date'])) {
-    $orders = getOrdersOnlyForUserDate("2", $_POST['start_date'], $_POST['end_date']);
+    $orders = getOrdersOnlyForUserDate($userID, $_POST['start_date'], $_POST['end_date']);
 } else {
     if(isset($_GET['page']))
     {
-        $orders = getOrdersOnlyForUserWithPage("2",$_GET['page']);
+        $orders = getOrdersOnlyForUserWithPage($userID,$_GET['page']);
     }
     
     if(!isset($_GET['page']))
     {
-        $orders = getOrdersOnlyForUserWithPage("2",1);
+        $orders = getOrdersOnlyForUserWithPage($userID,1);
     }
     if (isset($_GET['details']) && $_GET['details'] === 'true' && isset($_GET['orderId'])) {
         $orderId = $_GET['orderId'];
