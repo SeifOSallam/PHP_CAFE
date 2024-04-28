@@ -1,4 +1,7 @@
 <?php
+require_once '../Controllers/checks.php';
+
+
 function buildQueryString() {
     $queryString = "";
     if (isset($_GET['user'])) {
@@ -12,8 +15,8 @@ function buildQueryString() {
     }
     return $queryString;
 }
-function displayChecksTable($data, $users, $currentPage, $totalPages){
-    echo "<div class='container w-50 mx-auto mt-5'>";
+function displayChecksTable($data, $users, $currentPage, $totalPages, $filters){
+    echo "<div class='container w-75 mx-auto mt-5'>";
     echo 
     "<form class='row'>
         <div class='col-lg-3 col-sm-6'>
@@ -50,13 +53,15 @@ function displayChecksTable($data, $users, $currentPage, $totalPages){
         echo "<td style='text-align: center;'>{$check['username']}</td>";
         echo "<td style='text-align: center;'>{$check['total_amount']}</td>";
         echo "<td style='text-align: center;'>
-        <a class='btn btn-info' href='/'>Details</a>
+        <a class='btn btn-info' href='./checksPage.php?check={$check['id']}" . buildQueryString() . "'>Details</a>
         </td>";
         echo "</tr>";
+        if(!empty($_GET['check']) && $_GET['check'] == $check['id']) {
+            displayUserOrdersTable($check['id'], $filters);
+        }
     }
     echo "</table>";
 
-    // Pagination
     echo "<nav aria-label='Page navigation example' class='d-flex justify-content-center'>
         <ul class='pagination'>";
         if ($currentPage > 1) {
@@ -81,7 +86,25 @@ function displayChecksTable($data, $users, $currentPage, $totalPages){
     </nav>";
     echo "</div>";
 }
-function displayOrderTable() {
-    // Function to display order table
+function displayUserOrdersTable($userId, $filters) {
+    $orders = getUserCheckOrders($userId, $filters);
+    echo 
+    "</table>
+        <table class='table table-striped w-75 mx-auto text-center'>
+            <tr>
+                <th>Order Date</th>
+                <th>Total Amount</th>
+            </tr>
+            ";
+            foreach ($orders as $order) {
+                echo 
+                "<tr>
+                    <td>{$order['order_date']}</td>
+                    <td>{$order['total_amount']}</td>
+                </tr>";
+            }
+            echo "
+        </table>
+    <table class='table table-striped'>";
 }
 ?>

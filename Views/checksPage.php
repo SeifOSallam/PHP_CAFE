@@ -26,7 +26,7 @@
 </head>
 <body>
         <?php 
-            displayChecksTable($data, $users, $currPage, ceil(getOrdersCount()[0]/6));
+            displayChecksTable($data, $users, $currPage, ceil((count($data)+1)/6), $filters);
         ?>
     
 </body>

@@ -18,4 +18,8 @@
         global $database;
         return $database->getCount('orders');
     }
+    function getUserCheckOrders($userId, $filters) {
+        global $database;
+        return $database->getUserCheckOrders($userId, $filters);
+    }
 ?>
