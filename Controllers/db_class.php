@@ -193,12 +193,12 @@ class Database {
 
     public function getCount($table)
     {
-        $query="SELECT COUNT(*) FROM $table";
+        $query="SELECT COUNT(*) as count FROM $table";
         $stmt = $this->connection->prepare($query);
         try
         {
         $stmt -> execute();
-        $res = $stmt->fetch();
+        $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $res;
         }
         catch(PDOException $e)

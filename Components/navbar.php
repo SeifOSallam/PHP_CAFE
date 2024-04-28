@@ -28,7 +28,7 @@ echo '<nav class="navbar navbar-expand-lg fixed-top navbar-scroll">
         echo '<ul class="navbar-nav me-auto">
         
         <li class="nav-item">
-        <a class="nav-link active" aria-current="page" href="home.php">Home</a>
+        <a class="nav-link active" aria-current="page" href="admin_landing_page.php">Home</a>
         </li>
         
         <li class="nav-item">
