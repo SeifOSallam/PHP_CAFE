@@ -1,6 +1,6 @@
 <?php
 
-require_once '../db_connection.php';
+;
 require_once '../db_info.php';
 require_once './db_class.php';
 

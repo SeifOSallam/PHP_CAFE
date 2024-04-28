@@ -19,6 +19,7 @@ $cartItems = $database->getUserItems('cart',1);
 $total= 0;
 
 $user_id = 1;
+var_dump($_SESSION);
 ?>
 
 <!DOCTYPE html>

@@ -1,6 +1,5 @@
 <?php
 require_once '../db_info.php';
-require_once '../db_connection.php';
 require_once './db_class.php';
 
 try {
@@ -18,7 +17,6 @@ try {
 
     if ($user[0]) {
         session_start();
-
         if ($user[0]['role'] == 'admin') {
             header('Location: ../Views/admin_home.php');
             exit(); 
