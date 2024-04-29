@@ -1,6 +1,5 @@
 <?php
 $errors = isset($_GET['errors']) ? json_decode($_GET['errors']) : (object)[];
-
 ?>
 
 <!DOCTYPE html>

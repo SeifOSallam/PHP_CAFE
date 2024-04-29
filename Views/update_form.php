@@ -17,6 +17,14 @@ if (isset($_GET['old_data'])) {
         echo $e->getMessage();
     }
 }
+
+try {
+    $database = Database::getInstance();
+    $existing_room_numbers = $database->getRoomNumbers();
+} catch(PDOException $e) {
+    echo $e->getMessage();
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -56,7 +64,14 @@ if (isset($_GET['old_data'])) {
 
             <div class="form-group">
                 <label for="room_id">Room Number</label>
-                <input type="number" class="form-control" id="room_id" name="room_id" value="<?php echo $old_data['room_id']; ?>" required>
+                <select class="form-control" id="room_id" name="room_id" required>
+                    <?php foreach ($existing_room_numbers as $room_number): ?>
+                        <option value="<?php echo $room_number['id']; ?>" <?php echo ($old_data['room_id'] == $room_number['id']) ? 'selected' : ''; ?>><?php echo $room_number['id']; ?></option>
+                    <?php endforeach; ?>
+                </select>
+                <p class="text-danger fw-bold ">
+                    <?php echo isset($errors->room_id) ? $errors->room_id : ''; ?>
+                </p>
             </div>
 
             <div class="form-group">
