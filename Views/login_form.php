@@ -1,8 +1,11 @@
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
 <?php
-if(isset($_SESSION) && !is_null($_SESSION)){
-    header("location: ./admin_home.php");
+
+session_start();
+
+if(!is_null($_SESSION['id'])){
+    header("location: ./home.php");
     exit(); 
 }
 ?>

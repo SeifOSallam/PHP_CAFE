@@ -8,6 +8,31 @@ $total_amount = (float)$_GET['total'];
 $note = $_POST['note'];
 $date = date("Y-m-d");
 
+if(!is_null($_POST['user']))
+{
+$another_user = (int)$_POST['user'];
+
+// create order 
+$order_id = $database->insert('orders','user_id,total_amount,notes,room_id,order_date,status',"'$another_user',$total_amount,'$note',$room_id,'$date','Processing'");
+
+// add cart items to order_items
+$cartItems = $database->getUserItems('cart',$user_id);
+
+foreach ($cartItems as $item)
+{
+    $product_id = (int)$item['product_id'];
+    $quantity = $item['quantity'];
+    $product_price = (float)$item['product_price'];
+
+    $database->insert('order_items','product_id,order_id,quantity,product_price',"$product_id,$order_id,$quantity,$product_price");
+    $database->deleteItem('cart',$product_id,$user_id);
+}
+
+header("Location:../Views/admin_landing_page.php");
+}
+
+else
+{
 // create order 
 $order_id = $database->insert('orders','user_id,total_amount,notes,room_id,order_date,status',"'$user_id',$total_amount,'$note',$room_id,'$date','Processing'");
 
@@ -25,5 +50,8 @@ foreach ($cartItems as $item)
 }
 
 header("Location:../Views/home.php");
+}
+
+
 
 ?>

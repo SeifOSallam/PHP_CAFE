@@ -3,10 +3,16 @@ include "../Controllers/product.php";
 include "base.php";
 include "../Components/Table.php";
 
+session_start();
+$username = $_SESSION['username'];
+$role = $_SESSION['role'];
+$image = $_SESSION['image'];
+
 $products = selectProduct();
 $filterKeys = ['id', 'category_id', 'stock'];
 
 $columnNames = array('Product', 'Price', 'Image');
+
 ?>
 
 <!DOCTYPE html>
@@ -27,7 +33,9 @@ $columnNames = array('Product', 'Price', 'Image');
 </head>
 <body>
     
-<?php require '../Components/navbar.php';?>
+<?php require '../Components/navbar.php';
+      user_navbar($username,$image,$role);
+?>
 <div class="container-fluid center-content">
   <div class="container">
     <div class="bg-image"></div>
