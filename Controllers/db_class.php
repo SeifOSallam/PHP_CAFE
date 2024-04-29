@@ -313,7 +313,7 @@ class Database {
 
     public function getUserCheckOrders($userId, $filters) {
 
-        $query = "SELECT order_date, total_amount
+        $query = "SELECT order_date, total_amount, id
                   FROM orders 
                   ";
     
@@ -396,7 +396,6 @@ class Database {
     }
     public function getOrderDetailsByOrderId($orderId){
         $database = Database::getInstance();
-
         $query = 'SELECT o.id AS order_id, o.order_date, o.total_amount, o.notes, o.room_id, o.status, oi.quantity, p.name AS product_name, p.price AS product_price, p.image as image 
                 FROM orders o 
                 JOIN order_items oi ON o.id = oi.order_id 

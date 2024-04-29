@@ -22,4 +22,8 @@
         global $database;
         return $database->getUserCheckOrders($userId, $filters);
     }
+    function getOrderDetailsByOrderId($orderId) {
+        global $database;
+        return $database->getOrderDetailsByOrderId($orderId);
+    }
 ?>
