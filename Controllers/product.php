@@ -17,7 +17,6 @@ function selectProduct(){
 }
 function editProduct($id,$fields){
     global $database;
-    var_dump($fields);
     return $database->update("products",$id,$fields);
 }
 function deleteProduct($id){

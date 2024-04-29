@@ -252,7 +252,6 @@ class Database {
         $query = "UPDATE $table SET $fields WHERE product_id = :id";
         $statement = $this->connection->prepare($query);
         $statement->bindParam(':id', $id, PDO::PARAM_INT);
-        var_dump($statement);
         try {
             $statement->execute();
             return true;
