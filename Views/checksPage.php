@@ -3,6 +3,11 @@
     require '../Components/navbar.php';
     require '../Components/checksTable.php';
     require_once '../Controllers/checks.php';
+    session_start();
+    $username = $_SESSION['username'];
+    $role = $_SESSION['role'];
+    $image = $_SESSION['image'];
+    user_navbar($username,$image,$role);
     $currPage = empty($_GET['page'])? 1 : $_GET['page'];
     $filters = array();
     if (!empty($_GET['date_from'])) {

@@ -33,7 +33,7 @@ function buildQueryStringWithCheck() {
     return $queryString;
 }
 function displayChecksTable($data, $users, $currentPage, $totalPages, $filters){
-    echo "<div class='container w-75 mx-auto mt-5'>";
+    echo "<div class='container w-75 mx-auto' style='margin-top:10rem;'>";
     echo 
     "<form class='row'>
         <div class='col-lg-3 col-sm-6'>
