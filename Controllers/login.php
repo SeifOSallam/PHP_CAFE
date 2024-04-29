@@ -14,7 +14,6 @@ try {
     $password = $_POST['password'];
 
     $user = $database->findOneUser($email, $password);
-    var_dump($user);
     if ($user[0]) {
         session_start();
         $_SESSION['id'] = $user[0]['id'];

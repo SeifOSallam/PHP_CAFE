@@ -44,7 +44,7 @@ echo '<nav class="navbar navbar-expand-lg fixed-top navbar-scroll">
         </li>
 
         <li class="nav-item">
-        <a class="nav-link" href="showOrders.php">Checks</a>
+        <a class="nav-link" href="checksPage.php">Checks</a>
         </li>
         </ul>';
       }

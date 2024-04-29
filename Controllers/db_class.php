@@ -252,7 +252,6 @@ class Database {
         $query = "UPDATE $table SET $fields WHERE product_id = :id";
         $statement = $this->connection->prepare($query);
         $statement->bindParam(':id', $id, PDO::PARAM_INT);
-        var_dump($statement);
         try {
             $statement->execute();
             return true;
@@ -279,6 +278,66 @@ class Database {
         }
     }
 
+    
+
+    public function getChecks($page, $filters) {
+        $query = "SELECT users.username, SUM(orders.total_amount) as total_amount, users.id
+                  FROM orders 
+                  INNER JOIN users ON orders.user_id = users.id
+                  ";
+    
+        $whereClause = "";
+        if (isset($filters['user'])) {
+            $whereClause .= " WHERE users.username = '{$filters['user']}'";
+        }
+        if (isset($filters['date_from'])) {
+            $whereClause .= ($whereClause ? " AND" : " WHERE") . " orders.order_date >= '{$filters['date_from']}'";
+        }
+        if (isset($filters['date_to'])) {
+            $whereClause .= ($whereClause ? " AND" : " WHERE") . " orders.order_date <= '{$filters['date_to']}'";
+        }
+    
+        $query .= $whereClause . "GROUP BY users.username LIMIT 6 OFFSET " . (($page - 1) * 6);
+    
+        $statement = $this->connection->prepare($query);
+    
+        try {
+            $statement->execute();
+            $checks = $statement->fetchAll(PDO::FETCH_ASSOC);
+            return $checks;
+        } catch (PDOException $e) {
+            return "Error: " . $e->getMessage();
+        }
+    }
+
+    public function getUserCheckOrders($userId, $filters) {
+
+        $query = "SELECT order_date, total_amount, id
+                  FROM orders 
+                  ";
+    
+        $whereClause = "";
+        if (isset($filters['date_from'])) {
+            $whereClause .= ($whereClause ? " AND" : " WHERE") . " orders.order_date >= '{$filters['date_from']}'";
+        }
+        if (isset($filters['date_to'])) {
+            $whereClause .= ($whereClause ? " AND" : " WHERE") . " orders.order_date <= '{$filters['date_to']}'";
+        }
+        
+        $whereClause .= ($whereClause ? " AND" : " WHERE") . " user_id = '$userId'";
+        
+        $query .= $whereClause;
+    
+        $statement = $this->connection->prepare($query);
+    
+        try {
+            $statement->execute();
+            $checks = $statement->fetchAll(PDO::FETCH_ASSOC);
+            return $checks;
+        } catch (PDOException $e) {
+            return "Error: " . $e->getMessage();
+        }
+    }
     
 
     public function __destruct() {
@@ -336,7 +395,6 @@ class Database {
     }
     public function getOrderDetailsByOrderId($orderId){
         $database = Database::getInstance();
-
         $query = 'SELECT o.id AS order_id, o.order_date, o.total_amount, o.notes, o.room_id, o.status, oi.quantity, p.name AS product_name, p.price AS product_price, p.image as image 
                 FROM orders o 
                 JOIN order_items oi ON o.id = oi.order_id 

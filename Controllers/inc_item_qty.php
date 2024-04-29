@@ -7,7 +7,6 @@ $role = $_GET['role'];
 
 $res = $database->updateQty('cart',$_GET['product_id'],$update);
 
-var_dump($res);
 
 if($role === 'user')
 {
