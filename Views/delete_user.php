@@ -1,5 +1,4 @@
 <?php
-require_once  '../db_connection.php';
 require_once '../Controllers/utils.php';
 require_once '../db_info.php';
 require_once '../Controllers/db_class.php';

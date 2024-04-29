@@ -4,11 +4,6 @@ require_once '../Controllers/db_class.php';
 require '../Components/navbar.php';
 session_start();
 
-if(is_null($_SESSION['id']))
-{
-    header('Location:login_form.php');
-}
-
 if(isset($_GET['page']))
 {
     $products = $database->getProductsWithPage($_GET['page']); 
@@ -19,45 +14,47 @@ if(!isset($_GET['page']))
     $products = $database->getProductsWithPage(1); 
 }
 
-$cartItems = $database->getUserItems('cart',$_SESSION['id']);
+$user_id = $_SESSION['id'];
+$role = $_SESSION['role'];
+
+$cartItems = $database->getUserItems('cart',$user_id);
 
 $rooms = $database->select('rooms');
 
 $total= 0;
 
-$user_id = $_SESSION['id'];
-$role = $_SESSION['role'];
-
+$users = $database->getAllUsers();
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <?php 
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <?php 
     require 'base.php';
     require '../Components/product_card.php';
     require '../Components/cart_item.php'
     ?>
     <link rel="stylesheet" href="../Components/style.css">
     <title>Document</title>
-
+    
 </head>
 <body>
-
-<?php user_navbar($_SESSION['username'],$_SESSION['image'],$_SESSION['role']) ?>
-
-<div class="wrapper row">
+    
+    <?php user_navbar($_SESSION['username'],$_SESSION['image'],$_SESSION['role']);?>
+    
+    <div class="wrapper row">
         <div class="col-4">
             <div class="row text-center">
                 <h1 class='mt-5 text-ceneter'>Orders</h1>
+                
                 <?php
+                echo '<div class="d-flex flex-column justify-content-center ">';
                 if(!$cartItems)
                 {
                     echo '<h3 class="text-danger"> No products to be ordered </h3>';
                 }
-                echo '<div class="d-flex flex-column">';
                 foreach ($cartItems as $Item)
                 {
                     $total += (float)$Item['price']*(int)$Item['quantity'];
@@ -69,14 +66,24 @@ $role = $_SESSION['role'];
 <div>
     <?php
                     echo '<form action="../Controllers/confirm_order.php?user_id='.$user_id.'&total='.$total.'" method="post">';
-                    
-                    echo '<div class="d-flex flex-column">';
 
-                    echo '<input id="total" name="total"  value="       Toatal : '.$total.'" class="my-4" disabled />
-                    
+                    echo '<div class="d-flex flex-column">';
+                    echo '<label for="user">Choose user : </label>';
+
+                    // Users
+                    echo '<select id="user" name="user">';
+                    foreach($users as $user)
+                    {
+                        echo'<option value="'.$user['id'].'">'.$user['username'].'</option>';
+                    }
+                    echo '</select>';
+
+                    echo'
+                    <input id="total" name="total"  value="Toatal : '.$total.'" class="my-4" disabled />
                     <label for="room_no">Room No:</label>
                     <select id="room_no" name="room_no">';
-
+                    
+                    // Rooms
                     foreach($rooms as $room)
                     {
                         echo'<option value="'.$room['id'].'">'.$room['room_number'].'</option>';
@@ -86,8 +93,9 @@ $role = $_SESSION['role'];
                     </select>
                     <p>Notes</p>
                     <textarea id="note" name="note" rows="4" cols="40" placeholder="Add note here"></textarea>
-                    <button type="submit" class="btn btn-primary">Confirm</button>';
-                    echo '</div></form>'
+                    <button type="submit" class="btn btn-primary my-3">Confirm</button>';
+
+                    echo '</div> </form>'
                     ?>
                 </div>
             </div>

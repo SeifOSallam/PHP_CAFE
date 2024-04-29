@@ -1,5 +1,5 @@
 <?php 
-function product_card($user_id, $product_id, $img, $name, $category, $price)
+function product_card($user_id,$role,$product_id, $img, $name, $category, $price)
 {
   echo '
   <div class="col-4">
@@ -21,7 +21,7 @@ function product_card($user_id, $product_id, $img, $name, $category, $price)
               <div class="h-bg-inner"></div>
             </div>
 
-            <a class="cart" href="../Controllers/add_to_cart.php?product_id='.$product_id.'&user_id='.$user_id.'&product_price='.$price.'">
+            <a class="cart" href="../Controllers/add_to_cart.php?product_id='.$product_id.'&user_id='.$user_id.'&product_price='.$price.'&role='.$role.'">
               <span class="price">'.$price.'$</span>
               <span class="add-to-cart">
                 <span class="txt">Order Now</span>
