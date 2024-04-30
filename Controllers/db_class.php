@@ -278,7 +278,21 @@ class Database {
         }
     }
 
+    public function selectProducts($page) {
+        $query = "SELECT *
+                  FROM products 
+                  GROUP BY id LIMIT 6 OFFSET "  . (($page - 1) * 6);
+            
+        $statement = $this->connection->prepare($query);
     
+        try {
+            $statement->execute();
+            $products = $statement->fetchAll(PDO::FETCH_ASSOC);
+            return $products;
+        } catch (PDOException $e) {
+            return "Error: " . $e->getMessage();
+        }
+    }
 
     public function getChecks($page, $filters) {
         $query = "SELECT users.username, SUM(orders.total_amount) as total_amount, users.id
@@ -297,7 +311,7 @@ class Database {
             $whereClause .= ($whereClause ? " AND" : " WHERE") . " orders.order_date <= '{$filters['date_to']}'";
         }
     
-        $query .= $whereClause . "GROUP BY users.username, users.id LIMIT 6 OFFSET " . (($page - 1) * 6);
+        $query .= $whereClause . "GROUP BY users.id LIMIT 6 OFFSET " . (($page - 1) * 6);
     
         $statement = $this->connection->prepare($query);
     
