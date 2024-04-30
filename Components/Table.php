@@ -1,5 +1,5 @@
 <?php
-function display_in_table($rows, $columnNames, $numColumns, $filterKeys, $delete_url, $edit_url){
+function display_in_table($rows, $columnNames, $numColumns, $filterKeys, $delete_url, $edit_url, $currentPage, $totalPages){
     echo "<table class='table'>";
     echo "<thead class='thead-dark'>";
     echo "<tr>";
@@ -35,7 +35,28 @@ function display_in_table($rows, $columnNames, $numColumns, $filterKeys, $delete
 
     echo "</tbody>";
     echo "</table>";
-  
+    echo "<nav aria-label='Page navigation example' class='d-flex justify-content-center'>
+        <ul class='pagination'>";
+        if ($currentPage > 1) {
+            $firstLink = "?page=1";
+            echo "<li class='page-item'><a class='page-link' href='$firstLink'>First</a></li>";
+            $prevLink = "?page=".($currentPage - 1);
+            echo "<li class='page-item'><a class='page-link' href='$prevLink'>Previous</a></li>";
+        }
+        
+        for ($i = 1; $i <= $totalPages; $i++) {
+            $pageLink = "?page=".$i;
+            echo "<li class='page-item ".($currentPage == $i ? 'active' : '')."'><a class='page-link' href='$pageLink'>".$i."</a></li>";
+        }
+        
+        if ($currentPage < $totalPages) {
+            $nextLink = "?page=".($currentPage + 1);
+            echo "<li class='page-item'><a class='page-link' href='$nextLink'>Next</a></li>";
+            $lastLink = "?page=".$totalPages;
+            echo "<li class='page-item'><a class='page-link' href='$lastLink'>Last</a></li>";
+        }
+    echo "</ul>
+    </nav>";
 
 }
 ?>
