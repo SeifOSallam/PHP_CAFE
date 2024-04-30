@@ -20,7 +20,7 @@ function display_in_table($rows, $columnNames, $numColumns, $filterKeys, $delete
             foreach ($row as $key => $value){
                 if (!in_array($key, $filterKeys)) {
                     if ($key === "image") {
-                        echo "<td><img width='100' height='100' src='../assets/images/{$value}'></td>";
+                        echo "<td><img width='100' height='100' src='../assets/{$value}'></td>";
                     } else {
                         echo "<td>{$value}</td>";
                     }
