@@ -33,4 +33,9 @@ if(!empty($_GET['id']) && ($_GET['action']=="delete")){
     deleteProduct($std_id);
     header("Location: ../Views/showProducts.php");
 }
+
+function getProductsCount(){
+    global $database;
+    return $database->getCount('products');
+}
 ?>

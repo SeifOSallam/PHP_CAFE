@@ -28,6 +28,8 @@ $total= 0;
 $user_id = $_SESSION['id'];
 $role = $_SESSION['role'];
 
+$count = $database->getCount('products');
+$count = $count[0]['count'];
 ?>
 
 <!DOCTYPE html>
@@ -108,7 +110,7 @@ $role = $_SESSION['role'];
                 <!-- Pages Buttons -->
                 <div class="inline-block text-center">
                 <?php
-                for ($i=1 ; $i <= (20/6)+1; $i++)
+                for ($i=1 ; $i <= ($count/6)+1; $i++)
                 {
                     echo "<a href='?page=$i' class='btn btn-primary mx-2'>$i</a>";
                 }

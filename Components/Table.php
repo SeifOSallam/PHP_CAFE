@@ -16,7 +16,7 @@ function display_in_table($rows, $columnNames, $numColumns, $filterKeys, $delete
             $id = $row['id'];
             $delete_url_temp = "{$delete_url}?id={$id}&action=delete";
             $edit_url_temp = "{$edit_url}?id={$id}&action=edit";
-          
+        
             foreach ($row as $key => $value){
                 if (!in_array($key, $filterKeys)) {
                     if ($key === "image") {

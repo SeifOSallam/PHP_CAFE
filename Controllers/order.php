@@ -37,7 +37,7 @@ function getOrderDetailsByOrderId($orderId){
 if (isset($_GET['cancelled'])) {
     $cancelledOrderId = $_GET['cancelled'];
     CancelOrder($cancelledOrderId);
-    header("Location: ../Views/showOrders.php");
+    header("Location: ../Views/showOrdersAdmin.php");
 }
 
 ?>
