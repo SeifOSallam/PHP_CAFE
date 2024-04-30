@@ -11,26 +11,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $errors['username'] = 'Username is required';
     }
     else {
-        if ($_POST['new_password'] == $_POST['confirm_password']) {
-            try {
-                $database = Database::getInstance();
-                $username = $_POST['username'];
-                $newPassword = $_POST['new_password'];
-                $result = $database->resetPassword($username, $newPassword);
-                if ($result) {
-                    $message = "Password updated successfully!";
+        try {
+            $database = Database::getInstance();
+            $username = $_POST['username'];
+            $userExists = $database->checkUsernameExists($username);
+            if (!$userExists) {
+                $errors['username'] = 'Username does not exist';
+            } else {
+                $currentPassword = $database->getCurrentPassword($username);
+
+                if ($_POST['new_password'] == $_POST['confirm_password']) {
+                    if ($_POST['new_password'] === $currentPassword) {
+                        $errors['new_password'] = 'New password must be different from the current password';
+                    } else {
+                        $newPassword = $_POST['new_password'];
+                        $result = $database->resetPassword($username, $newPassword);
+                        if ($result) {
+                            $message = "Password updated successfully!";
+                        } else {
+                            $message = "Error updating password. Please try again later.";
+                        }
+                    }
                 } else {
-                    $message = "Error updating password. Please try again later.";
+                    $message = "Passwords do not match!";
                 }
-            } catch(PDOException $e) {
-                $message = "Error updating password: " . $e->getMessage();
             }
-        } else {
-            $message = "Passwords do not match!";
+        } catch(PDOException $e) {
+            $message = "Error checking username: " . $e->getMessage();
         }
     }
 }
 
-// Load view
 require_once '../Views/reset_password_form.php'; 
 ?>
