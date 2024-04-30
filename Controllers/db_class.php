@@ -297,7 +297,7 @@ class Database {
             $whereClause .= ($whereClause ? " AND" : " WHERE") . " orders.order_date <= '{$filters['date_to']}'";
         }
     
-        $query .= $whereClause . "GROUP BY users.username LIMIT 6 OFFSET " . (($page - 1) * 6);
+        $query .= $whereClause . "GROUP BY users.username, users.id LIMIT 6 OFFSET " . (($page - 1) * 6);
     
         $statement = $this->connection->prepare($query);
     

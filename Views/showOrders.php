@@ -64,7 +64,7 @@ if (isset($_POST['start_date']) && isset($_POST['end_date'])) {
 </head>
 <body>
 <?php require '../Components/navbar.php';
-      user_navbar($_SESSION['username'],$_SESSION['image']);
+      user_navbar($_SESSION['username'],$_SESSION['image'],$_SESSION['role']);
 ?>
 
 <div class="container text-center container-margin-top"> 
@@ -97,7 +97,7 @@ if (isset($_POST['start_date']) && isset($_POST['end_date'])) {
                             </button>
                         <?php endif; ?>
                         <a class="btn btn-info details-btn" href="?details=true&orderId=<?php echo $order['id']; ?>">Show Details</a>
-                      </td>
+                    </td>
                 </tr>
             <?php endforeach; ?>
         </tbody>

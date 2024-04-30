@@ -3,6 +3,7 @@
     require '../Components/navbar.php';
     require '../Components/checksTable.php';
     require_once '../Controllers/checks.php';
+
     session_start();
     $username = $_SESSION['username'];
     $role = $_SESSION['role'];
