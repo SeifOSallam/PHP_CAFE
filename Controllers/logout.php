@@ -10,8 +10,5 @@ unset($_SESSION['role']);
 setcookie("PHPSESSID", "", time() - 3600, "/" , "", 0);
 session_destroy(); 
 
-echo "logged out successfully";
-
-echo "<a href='../Views/login_form.php' class='btn btn-primary'> login  </a>";
-
+header('Location:../Views/login_form.php');
 ?>
