@@ -108,7 +108,7 @@ $users = $database->getAllUsers();
                     <?php 
                     foreach ($products as $product)
                     {
-                    product_card($user_id,$role,$product['id'],$product['image'],$product['name'],'Drinks',$product['price']);
+                    product_card($user_id,$role,$product['id'],$product['image'],$product['name'],$product['category'],$product['price']);
                     }
                     ?>
                 </div>
