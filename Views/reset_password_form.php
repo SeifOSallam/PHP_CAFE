@@ -95,6 +95,9 @@
             <div>
                 <label for="new_password">New Password:</label>
                 <input type="password" name="new_password" >
+                <?php if (!empty($errors['new_password'])) : ?>
+                    <div class="error"><?= $errors['new_password'] ?></div>
+                <?php endif; ?>
             </div>
             <div>
                 <label for="confirm_password">Confirm Password:</label>
