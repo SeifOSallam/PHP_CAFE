@@ -3,7 +3,7 @@
 function user_navbar($username,$image,$role)
 {
 
-echo '<nav class="navbar navbar-expand-lg fixed-top navbar-scroll">
+echo '<nav class="navbar navbar-expand-lg navbar-scroll">
     <div class="container-fluid">
       <button class="navbar-toggler" type="button" data-mdb-toggle="collapse"
         data-mdb-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"

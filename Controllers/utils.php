@@ -14,7 +14,7 @@ function display_table($rows){
         
         echo "<td>".$row['username']."</td>";
         echo "<td>".$row['room_id']."</td>";
-        echo "<td><img src='".$row['image']."' style='max-width: 100px; max-height: 100px;' /></td>";
+        echo "<td><img src='../assets/".$row['image']."' style='max-width: 100px; max-height: 100px;' /></td>";
         echo "<td><a href='{$edit_url}' class='btn btn-warning'>Edit</a></td>";
         echo "<td><a href='{$delete_url}' class='btn btn-danger'>Delete</a></td>";
         

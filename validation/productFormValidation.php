@@ -38,7 +38,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             if (!in_array($file_extension, $allowed_extensions)) {
                 $errors['image'] = "Invalid file format. Only JPG, JPEG, PNG, and GIF files are allowed.";
             } else {
-                $saved = move_uploaded_file($tmp_name, "../assets/images/{$filename}");
+                $saved = move_uploaded_file($tmp_name, "../assets/{$filename}");
             }
         }else{
             $errors['image'] = "image is required";

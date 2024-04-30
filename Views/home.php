@@ -50,7 +50,7 @@ $role = $_SESSION['role'];
 
 <div class="wrapper row">
         <div class="col-4">
-            <div class="row text-center">
+            <div class="row text-center p-4">
                 <h1 class='mt-5 text-ceneter'>Orders</h1>
                 <?php
                 if(!$cartItems)
