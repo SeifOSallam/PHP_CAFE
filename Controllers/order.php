@@ -16,6 +16,16 @@ function getOrdersOnlyForUserDate($userId, $startDate, $endDate){
     return $database->getOrdersOnlyForUserDate($userId, $startDate, $endDate);
 }
 
+function getAllOrdersWithPage($page){
+    global $database;
+    return $database->getAllOrdersWithPage($page);
+}
+
+function getAllOrdersWithDate($startDate, $endDate){
+    global $database;
+    return $database->getAllOrdersWithDate($startDate, $endDate);
+}
+
 function CancelOrder($id){
     global $database;
     $database->update("orders", $id, "status='Cancelled'");

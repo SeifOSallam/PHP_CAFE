@@ -407,6 +407,7 @@ class Database {
             return false; 
         }
     }
+    
     public function getOrderDetailsByOrderId($orderId){
         $database = Database::getInstance();
         $query = 'SELECT o.id AS order_id, o.order_date, o.total_amount, o.notes, o.room_id, o.status, oi.quantity, p.name AS product_name, p.price AS product_price, p.image as image 
@@ -428,6 +429,53 @@ class Database {
             return false; 
         }
      }
+
+     public function getAllOrdersWithDate($startDate, $endDate){ 
+        $database = Database::getInstance();
+        $query = 'SELECT id , order_date, total_amount, notes, room_id, status
+                FROM orders 
+                WHERE order_date >= :startDate
+                AND order_date <= :endDate ';
+        
+        $stmt = $this->connection->prepare($query);
+        $stmt->bindParam(':startDate', $startDate, PDO::PARAM_STR);
+        $stmt->bindParam(':endDate', $endDate, PDO::PARAM_STR);
+
+        try {
+            $stmt->execute();
+            $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $res;
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+            return false; 
+        }
+    }
+
+    public function getAllOrdersWithPage($page)
+    {
+        $database = Database::getInstance();
+        $limit = 6;
+        $offset = ($page - 1) * $limit;
+    
+        $query = 'SELECT id , order_date, total_amount, notes, room_id, status
+                  FROM orders
+                  LIMIT :limit
+                  OFFSET :offset';
+    
+        $stmt = $this->connection->prepare($query);
+        $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+        $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+    
+        try {
+            $stmt->execute();
+            $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $res;
+        } catch (PDOException $e) {
+            // Log the error instead of echoing
+            error_log("Error fetching orders: " . $e->getMessage());
+            return false; 
+        }
+    }
 }
 
 $database = Database::getInstance();
