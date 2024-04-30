@@ -4,7 +4,7 @@
 
 session_start();
 
-if(isset($_SESSION['id']) && !is_null($_SESSION['id'])){
+if(!is_null($_SESSION['id'])){
     header("location: ./home.php");
     exit(); 
 }
