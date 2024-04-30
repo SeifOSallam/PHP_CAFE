@@ -22,7 +22,7 @@ try {
         $_SESSION['role'] = $user[0]['role'];
 
         if ($user[0]['role'] == 'admin') {
-            header('Location: ../Views/admin_home.php');
+            header('Location: ../Views/admin_landing_page.php');
             exit(); 
         } elseif ($user[0]['role'] == 'user') {
             header('Location: ../Views/home.php');
