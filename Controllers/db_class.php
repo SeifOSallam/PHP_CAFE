@@ -397,6 +397,26 @@ class Database {
             return false;
         }
     }
+        public function checkUsernameExists($username) {
+        try {
+            $stmt = $this->connection->prepare("SELECT COUNT(*) FROM users WHERE username = ?");
+            $stmt->execute([$username]);
+            $count = $stmt->fetchColumn();
+            return ($count > 0); 
+        } catch(PDOException $e) {
+            return false;
+        }
+    }
+    public function getCurrentPassword($username) {
+        try {
+            $stmt = $this->connection->prepare("SELECT password FROM users WHERE username = ?");
+            $stmt->execute([$username]);
+            $password = $stmt->fetchColumn();
+            return $password;
+        } catch(PDOException $e) {
+            return null;
+        }
+    }
     public function getOrdersOnlyForUserDate($userId, $startDate, $endDate){ 
         $database = Database::getInstance();
         $query = 'SELECT id , order_date, total_amount, notes, room_id, status
