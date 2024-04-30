@@ -7,17 +7,19 @@ session_start();
 $username = $_SESSION['username'];
 $role = $_SESSION['role'];
 $image = $_SESSION['image'];
+
+$records_per_page = 5; 
+$page = isset($_GET['page']) ? intval($_GET['page']) : 1;
+$offset = ($page - 1) * $records_per_page;
+
 ?>
-
-
-
 
 <!DOCTYPE html>
 <html>
 <head>
     <title>All Users</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <style>
-        
         .add-user-button {
             background-color: #007bff; 
             color: white;
@@ -43,8 +45,17 @@ $image = $_SESSION['image'];
 
         <?php
         $database = Database::getInstance();
-        $rows = $database->getAllUsers();
+        $total_rows = $database->countAllUsers();
+        $total_pages = ceil($total_rows / $records_per_page);
+
+        $rows = $database->getAllUsersPaginated($offset, $records_per_page);
         display_table($rows);
+
+        echo "<ul class='pagination'>";
+        for ($i = 1; $i <= $total_pages; $i++) {
+            echo "<li class='page-item'><a class='page-link' href='?page={$i}'>{$i}</a></li>";
+        }
+        echo "</ul>";
         ?>
 
     </div>

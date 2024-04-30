@@ -357,6 +357,46 @@ class Database {
     public function __destruct() {
         $this->connection = null;
     }
+
+    public function getAllUsersPaginated($offset, $limit) {
+        $query = "SELECT * FROM users LIMIT :offset, :limit";
+        $statement = $this->connection->prepare($query);
+        $statement->bindParam(':offset', $offset, PDO::PARAM_INT);
+        $statement->bindParam(':limit', $limit, PDO::PARAM_INT);
+        $statement->execute();
+        return $statement->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function countAllUsers() {
+        $query = "SELECT COUNT(*) FROM users";
+        $statement = $this->connection->query($query);
+        return $statement->fetchColumn();
+    }
+    public function getRoomNumbers() {
+        $query = "SELECT id FROM rooms";
+        $statement = $this->connection->prepare($query);
+        try {
+            $statement->execute();
+            return $statement->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            echo "Error fetching room numbers: " . $e->getMessage();
+            return array(); // Return an empty array in case of an error
+        }
+    }
+    public function resetPassword($username, $newPassword) {
+        $query = "UPDATE users SET password = :newPassword WHERE username = :username";
+        $statement = $this->connection->prepare($query);
+        $statement->bindParam(':newPassword', $newPassword);
+        $statement->bindParam(':username', $username);
+
+        try {
+            $statement->execute();
+            return true;
+        } catch (PDOException $e) {
+            echo "Error updating password: " . $e->getMessage();
+            return false;
+        }
+    }
     public function getOrdersOnlyForUserDate($userId, $startDate, $endDate){ 
         $database = Database::getInstance();
         $query = 'SELECT id , order_date, total_amount, notes, room_id, status
