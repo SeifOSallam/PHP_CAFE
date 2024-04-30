@@ -278,7 +278,21 @@ class Database {
         }
     }
 
+    public function selectProducts($page) {
+        $query = "SELECT *
+                  FROM products 
+                  GROUP BY id LIMIT 6 OFFSET "  . (($page - 1) * 6);
+            
+        $statement = $this->connection->prepare($query);
     
+        try {
+            $statement->execute();
+            $products = $statement->fetchAll(PDO::FETCH_ASSOC);
+            return $products;
+        } catch (PDOException $e) {
+            return "Error: " . $e->getMessage();
+        }
+    }
 
     public function getChecks($page, $filters) {
         $query = "SELECT users.username, SUM(orders.total_amount) as total_amount, users.id
@@ -297,7 +311,7 @@ class Database {
             $whereClause .= ($whereClause ? " AND" : " WHERE") . " orders.order_date <= '{$filters['date_to']}'";
         }
     
-        $query .= $whereClause . "GROUP BY users.username, users.id LIMIT 6 OFFSET " . (($page - 1) * 6);
+        $query .= $whereClause . "GROUP BY users.id LIMIT 6 OFFSET " . (($page - 1) * 6);
     
         $statement = $this->connection->prepare($query);
     
@@ -342,6 +356,66 @@ class Database {
 
     public function __destruct() {
         $this->connection = null;
+    }
+
+    public function getAllUsersPaginated($offset, $limit) {
+        $query = "SELECT * FROM users LIMIT :offset, :limit";
+        $statement = $this->connection->prepare($query);
+        $statement->bindParam(':offset', $offset, PDO::PARAM_INT);
+        $statement->bindParam(':limit', $limit, PDO::PARAM_INT);
+        $statement->execute();
+        return $statement->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function countAllUsers() {
+        $query = "SELECT COUNT(*) FROM users";
+        $statement = $this->connection->query($query);
+        return $statement->fetchColumn();
+    }
+    public function getRoomNumbers() {
+        $query = "SELECT id FROM rooms";
+        $statement = $this->connection->prepare($query);
+        try {
+            $statement->execute();
+            return $statement->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            echo "Error fetching room numbers: " . $e->getMessage();
+            return array(); // Return an empty array in case of an error
+        }
+    }
+    public function resetPassword($username, $newPassword) {
+        $query = "UPDATE users SET password = :newPassword WHERE username = :username";
+        $statement = $this->connection->prepare($query);
+        $statement->bindParam(':newPassword', $newPassword);
+        $statement->bindParam(':username', $username);
+
+        try {
+            $statement->execute();
+            return true;
+        } catch (PDOException $e) {
+            echo "Error updating password: " . $e->getMessage();
+            return false;
+        }
+    }
+        public function checkUsernameExists($username) {
+        try {
+            $stmt = $this->connection->prepare("SELECT COUNT(*) FROM users WHERE username = ?");
+            $stmt->execute([$username]);
+            $count = $stmt->fetchColumn();
+            return ($count > 0); 
+        } catch(PDOException $e) {
+            return false;
+        }
+    }
+    public function getCurrentPassword($username) {
+        try {
+            $stmt = $this->connection->prepare("SELECT password FROM users WHERE username = ?");
+            $stmt->execute([$username]);
+            $password = $stmt->fetchColumn();
+            return $password;
+        } catch(PDOException $e) {
+            return null;
+        }
     }
     public function getOrdersOnlyForUserDate($userId, $startDate, $endDate){ 
         $database = Database::getInstance();
@@ -393,6 +467,7 @@ class Database {
             return false; 
         }
     }
+    
     public function getOrderDetailsByOrderId($orderId){
         $database = Database::getInstance();
         $query = 'SELECT o.id AS order_id, o.order_date, o.total_amount, o.notes, o.room_id, o.status, oi.quantity, p.name AS product_name, p.price AS product_price, p.image as image 
@@ -414,6 +489,53 @@ class Database {
             return false; 
         }
      }
+
+     public function getAllOrdersWithDate($startDate, $endDate){ 
+        $database = Database::getInstance();
+        $query = 'SELECT id , order_date, total_amount, notes, room_id, status
+                FROM orders 
+                WHERE order_date >= :startDate
+                AND order_date <= :endDate ';
+        
+        $stmt = $this->connection->prepare($query);
+        $stmt->bindParam(':startDate', $startDate, PDO::PARAM_STR);
+        $stmt->bindParam(':endDate', $endDate, PDO::PARAM_STR);
+
+        try {
+            $stmt->execute();
+            $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $res;
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+            return false; 
+        }
+    }
+
+    public function getAllOrdersWithPage($page)
+    {
+        $database = Database::getInstance();
+        $limit = 6;
+        $offset = ($page - 1) * $limit;
+    
+        $query = 'SELECT id , order_date, total_amount, notes, room_id, status
+                  FROM orders
+                  LIMIT :limit
+                  OFFSET :offset';
+    
+        $stmt = $this->connection->prepare($query);
+        $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+        $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+    
+        try {
+            $stmt->execute();
+            $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $res;
+        } catch (PDOException $e) {
+            // Log the error instead of echoing
+            error_log("Error fetching orders: " . $e->getMessage());
+            return false; 
+        }
+    }
 }
 
 $database = Database::getInstance();

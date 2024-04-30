@@ -40,7 +40,7 @@ echo '<nav class="navbar navbar-expand-lg navbar-scroll">
         </li>        
         
         <li class="nav-item">
-        <a class="nav-link" href="showOrders.php">Manual Order</a>
+        <a class="nav-link" href="showOrdersAdmin.php">Manual Order</a>
         </li>
 
         <li class="nav-item">

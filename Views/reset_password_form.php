@@ -60,6 +60,10 @@
             background-color: #0056b3;
         }
 
+        .error {
+            color: red;
+        }
+
         .message {
             margin-top: 10px;
             padding: 10px;
@@ -78,20 +82,26 @@
     <div class="container">
         <h2>Forget Password</h2>
         <?php if (!empty($message)) : ?>
-            <div class="message <?= strpos($message, 'successfully') !== false ? 'success' : '' ?>"><?= $message ?></div>
+            <div class="message <?= strpos($message, 'successfully') !== false ? 'success' : 'error' ?>"><?= $message ?></div>
         <?php endif; ?>
         <form method="post" action="../Controllers/reset_password.php">
             <div>
                 <label for="username">Username:</label>
-                <input type="text" name="username" required>
+                <input type="text" name="username" >
+                <?php if (!empty($errors['username'])) : ?>
+                    <div class="error"><?= $errors['username'] ?></div>
+                <?php endif; ?>
             </div>
             <div>
                 <label for="new_password">New Password:</label>
-                <input type="password" name="new_password" required>
+                <input type="password" name="new_password" >
+                <?php if (!empty($errors['new_password'])) : ?>
+                    <div class="error"><?= $errors['new_password'] ?></div>
+                <?php endif; ?>
             </div>
             <div>
                 <label for="confirm_password">Confirm Password:</label>
-                <input type="password" name="confirm_password" required>
+                <input type="password" name="confirm_password" >
             </div>
             <div>
                 <input type="submit" value="Submit">

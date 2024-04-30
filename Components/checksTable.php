@@ -144,7 +144,7 @@ function displayOrderItemsTable($orderId) {
                 <div class='row row-cols-1 row-cols-md-3 g-4'>";
             foreach ($ordersDetails as $details) {
                 echo "<div class='col'>";
-                product_card($details['product_name'], $details['product_price'], $details['quantity'],"../assets/images/{$details['image']}");
+                product_card($details['product_name'], $details['product_price'], $details['quantity'],"../assets/{$details['image']}");
                 echo "</div>";
             }
             echo "</div>
