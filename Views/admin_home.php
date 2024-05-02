@@ -4,6 +4,12 @@ require_once '../Controllers/db_class.php';
 require '../Components/navbar.php';
 
 session_start();
+
+if(!is_null($_SESSION) && $_SESSION['role'] === 'user')
+{
+    header('Location:home.php');
+}
+
 $username = $_SESSION['username'];
 $role = $_SESSION['role'];
 $image = $_SESSION['image'];

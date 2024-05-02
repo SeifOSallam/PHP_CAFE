@@ -9,6 +9,11 @@ if(is_null($_SESSION['id']))
     header('Location:login_form.php');
 }
 
+if(!is_null($_SESSION['role']) && $_SESSION['role'] === 'admin')
+{
+    header('Location:admin_landing_page.php');
+}
+
 if(isset($_GET['page']))
 {
     $products = $database->getProductsWithPage($_GET['page']); 

@@ -1,6 +1,12 @@
 <?php 
 include "../Controllers/order.php";
 session_start();
+
+if(!is_null($_SESSION) && $_SESSION['role'] === 'user')
+{
+    header('Location:home.php');
+}
+
 if (isset($_GET['cancelled'])) {
     $cancelledOrderId = $_GET['cancelled'];
     CancelOrder($cancelledOrderId);
