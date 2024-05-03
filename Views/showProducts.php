@@ -2,8 +2,15 @@
 include "../Controllers/product.php";
 include "base.php";
 include "../Components/Table.php";
+require_once '../Controllers/db_class.php';
 
 session_start();
+
+if(!is_null($_SESSION) && $_SESSION['role'] === 'user')
+{
+    header('Location:home.php');
+}
+
 $username = $_SESSION['username'];
 $role = $_SESSION['role'];
 $image = $_SESSION['image'];
@@ -12,7 +19,8 @@ $products = selectProduct($currPage);
 $filterKeys = ['id', 'category_id', 'stock'];
 
 $columnNames = array('Product', 'Price', 'Image');
-
+$count = getProductsCount();
+$count = $count[0]['count'];
 ?>
 
 <!DOCTYPE html>
@@ -43,7 +51,7 @@ $columnNames = array('Product', 'Price', 'Image');
     <h2 class="text-center mb-4">All Products</h2> 
     <div class="table-responsive">
       <?php
-        display_in_table($products, $columnNames, 3, $filterKeys,"../Controllers/product.php","productForm.php", $currPage, ceil((count($products)+1)/6));
+        display_in_table($products, $columnNames, 3, $filterKeys,"../Controllers/product.php","productForm.php", $currPage, ceil(($count+1)/6));
       ?>
     </div>
   </div>

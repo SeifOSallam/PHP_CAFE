@@ -2,6 +2,7 @@
 
 require_once '../db_info.php';
 require_once './db_class.php';
+require_once '../Views/base.php';
 
 $errors = [];
 
@@ -21,24 +22,39 @@ if (count($errors)) {
     exit();
 }
 
-if (isset($_FILES['image']['tmp_name'])) {
-    $filename = $_FILES['image']['name'];
-    $tmp_name = $_FILES['image']['tmp_name'];
-    $extension = pathinfo($filename, PATHINFO_EXTENSION);
-    $allowed = array('jpeg', 'jpg', 'png', 'gif', 'bmp', 'JPEG', 'JPG', 'PNG', 'GIF', 'BMP');
+// if (isset($_FILES['image']['tmp_name'])) {
+//     $filename = $_FILES['image']['name'];
+//     $tmp_name = $_FILES['image']['tmp_name'];
+//     $extension = pathinfo($filename, PATHINFO_EXTENSION);
+//     $allowed = array('jpeg', 'jpg', 'png', 'gif', 'bmp', 'JPEG', 'JPG', 'PNG', 'GIF', 'BMP');
 
-    if (!in_array($extension, $allowed)) {
-        $errors['image'] = 'Wrong file format';
-    } else {
-        $uploadDir = '../assets/images/';
-        $uploadedFilePath = $uploadDir . $filename;
-        $saved = move_uploaded_file($tmp_name, $uploadedFilePath);
-        if (!$saved) {
-            $errors['image'] = 'Failed to save image';
+//     if (!in_array($extension, $allowed)) {
+//         $errors['image'] = 'Wrong file format';
+//     } else {
+//         $uploadDir = '../assets/';
+//         $uploadedFilePath = $uploadDir . $filename;
+//         $saved = move_uploaded_file($tmp_name, $uploadedFilePath);
+//         if (!$saved) {
+//             $errors['image'] = 'Failed to save image';
+//         }
+//     }
+// }
+    if(!empty($_FILES['image']['tmp_name']))
+    {
+        if (isset($_FILES['image']['tmp_name'])){
+            $filename = $_FILES['image']['name'];
+            $tmp_name = $_FILES['image']['tmp_name'];
+            $allowed_extensions = array('jpg', 'jpeg', 'png', 'gif');
+            $file_extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+            if (!in_array($file_extension, $allowed_extensions)) {
+                $errors['image'] = "Invalid file format. Only JPG, JPEG, PNG, and GIF files are allowed.";
+            } else {
+                $saved = move_uploaded_file($tmp_name, "../assets/{$filename}");
+            }
+        }else{
+            $errors['image'] = "image is required";
         }
     }
-}
-
 if (empty($errors)) {
     try {
         $database = Database::getInstance();
@@ -51,7 +67,7 @@ if (empty($errors)) {
             $values .= "'$value',";
         }
         $columns .= "image";
-        $values .= "'$uploadedFilePath',";
+        $values .= "'$filename',";
 
         $columns = rtrim($columns, ',');
         $values = rtrim($values, ',');

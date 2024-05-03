@@ -24,6 +24,10 @@ $rooms = $database->select('rooms');
 $total= 0;
 
 $users = $database->getAllUsers();
+
+$count = $database->getCount('products');
+$count = $count[0]['count'];
+
 ?>
 
 <!DOCTYPE html>
@@ -46,7 +50,7 @@ $users = $database->getAllUsers();
     
     <div class="wrapper row">
         <div class="col-4">
-            <div class="row text-center">
+            <div class="row text-center p-4">
                 <h1 class='mt-5 text-ceneter'>Orders</h1>
                 
                 <?php
@@ -116,7 +120,7 @@ $users = $database->getAllUsers();
                 <!-- Pages Buttons -->
                 <div class="inline-block text-center">
                 <?php
-                for ($i=1 ; $i <= (20/6)+1; $i++)
+                for ($i=1 ; $i <= ($count/6)+1; $i++)
                 {
                     echo "<a href='?page=$i' class='btn btn-primary mx-2'>$i</a>";
                 }

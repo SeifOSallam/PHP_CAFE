@@ -9,6 +9,11 @@ if(is_null($_SESSION['id']))
     header('Location:login_form.php');
 }
 
+if(!is_null($_SESSION['role']) && $_SESSION['role'] === 'admin')
+{
+    header('Location:admin_landing_page.php');
+}
+
 if(isset($_GET['page']))
 {
     $products = $database->getProductsWithPage($_GET['page']); 
@@ -28,6 +33,8 @@ $total= 0;
 $user_id = $_SESSION['id'];
 $role = $_SESSION['role'];
 
+$count = $database->getCount('products');
+$count = $count[0]['count'];
 ?>
 
 <!DOCTYPE html>
@@ -50,7 +57,7 @@ $role = $_SESSION['role'];
 
 <div class="wrapper row">
         <div class="col-4">
-            <div class="row text-center">
+            <div class="row text-center p-4">
                 <h1 class='mt-5 text-ceneter'>Orders</h1>
                 <?php
                 if(!$cartItems)
@@ -108,7 +115,7 @@ $role = $_SESSION['role'];
                 <!-- Pages Buttons -->
                 <div class="inline-block text-center">
                 <?php
-                for ($i=1 ; $i <= (20/6)+1; $i++)
+                for ($i=1 ; $i <= ($count/6)+1; $i++)
                 {
                     echo "<a href='?page=$i' class='btn btn-primary mx-2'>$i</a>";
                 }

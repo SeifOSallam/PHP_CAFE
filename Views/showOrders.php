@@ -9,6 +9,11 @@ if (isset($_GET['cancelled'])) {
     CancelOrder($cancelledOrderId);
 }
 
+if(!is_null($_SESSION) && $_SESSION['role'] === 'admin')
+{
+    header('Location:admin_landing_page.php');
+}
+
 if (isset($_POST['start_date']) && isset($_POST['end_date'])) {
     $orders = getOrdersOnlyForUserDate($userID, $_POST['start_date'], $_POST['end_date']);
 } else {
