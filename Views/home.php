@@ -35,6 +35,7 @@ $role = $_SESSION['role'];
 
 $count = $database->getCount('products');
 $count = $count[0]['count'];
+
 ?>
 
 <!DOCTYPE html>
@@ -55,16 +56,34 @@ $count = $count[0]['count'];
 
 <?php user_navbar($_SESSION['username'],$_SESSION['image'],$_SESSION['role']) ?>
 
+<?php 
+
+if(isset($_GET['error'])) 
+{
+    echo '<div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <strong>Error !</strong> Can not order when cart is empty :)
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>';
+} 
+if(isset($_GET['success'])) 
+{
+    echo '<div class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong>Success !</strong> Order Placed successfully !
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>';
+}
+?>
+
 <div class="wrapper row">
         <div class="col-4">
             <div class="row text-center p-4">
-                <h1 class='mt-5 text-ceneter'>Orders</h1>
+                <!-- <h1 class='mt-5 mb-5  text-ceneter'>Cart</h1> -->
                 <?php
                 if(!$cartItems)
                 {
-                    echo '<h3 class="text-danger"> No products to be ordered </h3>';
+                    echo '<h3 class="text-danger my-5"> No products to be ordered </h3>';
                 }
-                echo '<div class="d-flex flex-column">';
+                echo '<div class="d-flex flex-column justify-content-center align-items-center ">';
                 foreach ($cartItems as $Item)
                 {
                     $total += (float)$Item['price']*(int)$Item['quantity'];
@@ -79,10 +98,10 @@ $count = $count[0]['count'];
                     
                     echo '<div class="d-flex flex-column">';
 
-                    echo '<input id="total" name="total"  value="       Toatal : '.$total.'" class="my-4" disabled />
+                    echo '<input class="form-control bg-white w-50 m-auto " id="total" name="total"  value="       Toatal : '.$total.'" class="my-4" disabled />
                     
-                    <label for="room_no">Room No:</label>
-                    <select id="room_no" name="room_no">';
+                    <label class="form-label " for="room_no">Room No:</label>
+                    <select class="form-select w-50 m-auto" id="room_no" name="room_no">';
 
                     foreach($rooms as $room)
                     {
@@ -91,9 +110,9 @@ $count = $count[0]['count'];
                     
                     echo'
                     </select>
-                    <p>Notes</p>
-                    <textarea id="note" name="note" rows="4" cols="40" placeholder="Add note here"></textarea>
-                    <button type="submit" class="btn btn-primary">Confirm</button>';
+                    <label class="form-label " for="note">Notes</label>
+                    <textarea class="form-control my-3" id="note" name="note" rows="4" cols="40" placeholder="Add note here"></textarea>
+                    <button type="submit" class="btn btn-primary w-50 m-auto">Confirm</button>';
                     echo '</div></form>'
                     ?>
                 </div>
@@ -101,7 +120,7 @@ $count = $count[0]['count'];
         </div>
 
         <div class="col-8">
-            <div class='row mt-5'>
+            <div class='row'>
                 <!-- Products -->
                 <div class="row">
                     <?php 
