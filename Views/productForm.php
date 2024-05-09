@@ -3,6 +3,10 @@ include "../Controllers/category.php";
 include "../Controllers/product.php";
 include "../Views/base.php";
 
+session_start();
+$username = $_SESSION['username'];
+$role = $_SESSION['role'];
+$image = $_SESSION['image'];
 if(isset($_GET['errors'])){
     $errors = json_decode($_GET["errors"], true);
 }
@@ -10,7 +14,8 @@ if(isset($_GET['errors'])){
 if(isset($_GET['old_data'])){
     $old_data = json_decode($_GET["old_data"], true);
 }
-if(isset($_GET['action']) && $_GET['action']="edit"){
+if(isset($_GET['action']) && $_GET['action'] === "edit"){
+  $product_id=$_GET['id'];
   $product = getOneProduct($_GET['id']) ;
 }
 $categories = selectCategories();
@@ -66,7 +71,9 @@ $categories = selectCategories();
   </style>
 </head>
 <body>
-<?php require '../Components/navbar.php';?>
+<?php require '../Components/navbar.php';
+      user_navbar($username,$image,$role);
+?>
 <div class="container">
   <div class="bg-image"></div>
   <div class="form-container">
@@ -80,6 +87,7 @@ $categories = selectCategories();
       <div class="form-group">
         <label for="quantity">Price:</label>
         <input type="text" id="quantity" name="price" <?php if(!empty($product)){echo 'value="'.$product[0]["price"].'"';}?>>
+        <?php if (!empty($errors['price'])) echo "<div class='text-danger'>{$errors['price']}</div>"; ?> 
       </div>
      <div class="form-group row">
         <label for="productCategory" class="col-sm-3 col-form-label">Category:</label>
@@ -93,6 +101,7 @@ $categories = selectCategories();
               <?php endif; ?>
            <?php endforeach; ?>
             </select>
+          <?php if (!empty($errors['category'])) echo "<div class='text-danger'>{$errors['category']}</div>"; ?> 
         </div>
         <div class="col-sm-2">
           <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#addCategoryModal">Add Category</button>
@@ -101,6 +110,7 @@ $categories = selectCategories();
     <div class="form-group">
         <label for="quantity">Stock:</label>
         <input type="number" id="quantity" name="stock" min="0" <?php if(!empty($product)){echo 'value="'.$product[0]["stock"].'"';}?>>
+        <?php if (!empty($errors['stock'])) echo "<div class='text-danger'>{$errors['stock']}</div>"; ?> 
     </div>
       <div class="form-group">
         <label for="productImage">Product Picture:</label>
@@ -119,6 +129,7 @@ $categories = selectCategories();
     </form>
   </div>
 </div>
+
 <div class="modal fade" id="addCategoryModal" tabindex="-1" role="dialog" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -133,9 +144,11 @@ $categories = selectCategories();
                     <div class="form-group">
                         <label for="categoryName">Category Name:</label>
                         <input type="text" class="form-control" id="categoryName" name="categoryName">
+                        <input type="hidden" id="hiddenImageName" name="product_id" value="<?php if(!empty($product)){echo  $product_id;} ?>">
                         <?php if (!empty($errors['category'])): ?>
                             <div class="text-danger"><?php echo $errors['category']; ?></div>
                         <?php endif; ?>
+                       
                     </div>
                     
                     <button type="submit" class="btn btn-primary">Add</button>
@@ -146,6 +159,13 @@ $categories = selectCategories();
 </div>
 
 <script>
+
+$(document).ready(function(){
+  <?php if (!empty($errors['category'])): ?>
+    $('#addCategoryModal').modal('show');
+  <?php endif; ?>
+});
+
 function displayFileName(input) {
     var fileName = input.files[0].name;
     document.getElementById('image').style.display =  'none';

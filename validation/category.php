@@ -6,11 +6,10 @@ if (isset($_POST['categoryName'])) {
     $categoryName = trim($_POST['categoryName']);
 
     if (empty($categoryName)) {
-        $errors['category'] = "Category name is required.";
+        $errors['category'] = "You enter a empty for the category, please try to add again with data.";
     } 
-} else {
-    $errors['category'] = "Category name is required.";
-}
+} 
+
 
 if (!empty($errors)) {
     $errors = json_encode($errors);
@@ -18,7 +17,12 @@ if (!empty($errors)) {
     exit;
 } else {
     insertCatgory($categoryName);
-    header("Location: ../Views/productForm.php");
+    if(isset($_POST['product_id'])){
+        $id=$_POST['product_id'];
+       header("Location: ../Views/productForm.php?id={$id}&action=edit");
+    }else{
+        header("Location: ../Views/productForm.php");
+    }
     exit; 
 }
 
