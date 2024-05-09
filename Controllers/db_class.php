@@ -169,7 +169,7 @@ class Database {
 
     public function getProductsWithPage($page)
     {
-    $query = 'SELECT p.id , p.image , p.name , c.name as category , p.price 
+    $query = 'SELECT p.id , p.image , p.name , p.stock , c.name as category , p.price 
             FROM products p
             INNER JOIN categories c 
             ON p.category_id = c.id

@@ -53,7 +53,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST"&& empty($_POST['id'])) {
         $errors['price'] = "price is required";
     } 
     $stock = $_POST['stock'];
-    if (empty($_POST['stock'])) {
+
+    if (empty($_POST['stock'])&$_POST['stock']!=0) {
         $errors['stock'] = "stock is required";
     } 
     if (!empty($errors)) {
@@ -95,7 +96,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST"&& empty($_POST['id'])) {
         $errors['price'] = "price is required";
     } 
     $stock = $_POST['stock'];
-    if (empty($_POST['stock'])) {
+    if (empty($_POST['stock'])&$_POST['stock']!=0) {
         $errors['stock'] = "stock is required";
     } 
     if (!empty($errors)) {
