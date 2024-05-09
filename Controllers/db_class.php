@@ -81,10 +81,10 @@ class Database {
 
         try {
             $statement->execute();
-            echo "Record deleted successfully.";
+            //echo "Record deleted successfully.";
             return true;
         } catch (PDOException $e) {
-            echo "Error deleting record: " . $e->getMessage();
+            //echo "Error deleting record: " . $e->getMessage();
             return false;
         }
     }
@@ -282,12 +282,13 @@ class Database {
         $query = "SELECT *
                   FROM products 
                   GROUP BY id LIMIT 6 OFFSET "  . (($page - 1) * 6);
-            
+       
         $statement = $this->connection->prepare($query);
     
         try {
             $statement->execute();
             $products = $statement->fetchAll(PDO::FETCH_ASSOC);
+            
             return $products;
         } catch (PDOException $e) {
             return "Error: " . $e->getMessage();
