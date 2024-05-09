@@ -13,7 +13,7 @@ if (isset($_POST['categoryName'])) {
 
 if (!empty($errors)) {
     $errors = json_encode($errors);
-    header("Location: ../Views/productForm.php?errors={$errors}");
+    header("Location: ../Views/productForm.php?id=1&action=edit&errors={$errors}");
     exit;
 } else {
     insertCatgory($categoryName);
