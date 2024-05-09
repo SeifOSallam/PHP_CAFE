@@ -81,44 +81,14 @@ function displayOrdersTable($data, $users, $currentPage, $totalPages, $filters){
             <a class='btn btn-info' href='./showOrdersAdmin.php?order={$order['id']}" . buildQueryString() . "'>Details</a>
         </td>";
         echo "</tr>";
-        if(!empty($_GET['check']) && $_GET['check'] == $order['id']) {
-            displayUserOrdersTable($order['id'], $filters);
+        if(!empty($_GET['order']) && $_GET['order'] == $order['id']) {
+            displayOrderItemsTable($order['id']);
         }
     }
     echo "</table>";
     paginate($currentPage, $totalPages, buildQueryString());
 
     echo "</div>";
-}
-
-function displayUserOrdersTable($userId, $filters) {
-    $orders = getUserCheckOrders($userId, $filters);
-    echo 
-    "</table>
-        <table class='table table-striped w-75 mx-auto text-center'>
-            <tr>
-                <th>Order Date</th>
-                <th>Total Amount</th>
-                <th></th>
-            </tr>
-            ";
-            foreach ($orders as $order) {
-                echo 
-                "<tr>
-                    <td>{$order['order_date']}</td>
-                    <td>{$order['total_amount']}</td>
-                    <td>
-                        <a class='btn btn-info' href='./checksPage.php?order={$order['id']}"
-                         . buildQueryStringWithCheck() . "'>Details</a>
-                    </td>
-                </tr>";
-                if (!empty($_GET['order']) && $_GET['order'] == $order['id']) {
-                    displayOrderItemsTable($order['id']);
-                }
-            }
-            echo "
-        </table>
-    <table class='table table-striped'>";
 }
 
 function displayOrderItemsTable($orderId) {
@@ -135,7 +105,7 @@ function displayOrderItemsTable($orderId) {
             }
             echo "</div>
             </div>
-        <div class='container w-75 mx-auto mt-5'>
-    <table class='table table-striped w-75 mx-auto text-center'>";
+        <div class='container mx-auto mt-5'>
+    <table class='table table-striped mx-auto text-center'>";
 }
 ?>
