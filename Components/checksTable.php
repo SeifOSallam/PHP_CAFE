@@ -45,15 +45,15 @@ function displayChecksTable($data, $users, $currentPage, $totalPages, $filters){
                 echo "
             </select>
         </div>
-        <div class='col-lg-3 col-sm-6 d-flex justify-content-center'>
+        <div class='col-lg-3 col-sm-6 d-flex justify-content-center align-items-center'>
             <label for='date_from'>From: </label>
             <input class='form-control' type='date' id='date_from' name='date_from'>
         </div>
-        <div class='col-lg-3 col-sm-6 d-flex justify-content-center'>
+        <div class='col-lg-3 col-sm-6 d-flex justify-content-center align-items-center'>
             <label for='date_to'>To: </label>
             <input class='form-control' type='date' id='date_to' name='date_to'>
         </div>
-        <div class='col-lg-3 col-sm-6'>
+        <div class='col-lg-3 col-sm-6 d-flex justify-content-center'>
             <input class='btn btn-info' type='submit' value='Filter'>
         </div>
 
