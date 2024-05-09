@@ -52,7 +52,7 @@ function displayOrdersTable($data, $users, $currentPage, $totalPages, $filters){
         </div>
         <div class='col-lg-3 col-sm-6 d-flex justify-content-center align-items-center'>
             <label for='date_to'>To: </label>
-            <input class='form-control' type='date' id='date_to' name='date_to'>
+            <input class='form-control' type='date' id='date_to' name='date_to' >
         </div>
         <div class='col-lg-3 col-sm-6 d-flex justify-content-center'>
             <input class='btn btn-info' type='submit' value='Filter'>
@@ -75,7 +75,16 @@ function displayOrdersTable($data, $users, $currentPage, $totalPages, $filters){
         echo "<td style='text-align: center;'>{$order['username']}</td>";
         echo "<td style='text-align: center;'>{$order['room_number']}</td>";
         echo "<td style='text-align: center;'>{$order['total_amount']}</td>";
-        echo "<td style='text-align: center;'>{$order['status']}</td>";
+        echo "<td style='text-align: center;'>";
+        echo "<form><select class='form-select w-75 mx-auto'>";
+        $statuses = array("Out for delivery", "Processing", "Done", "Cancelled");
+        foreach ($statuses as $status) {
+            echo "<option class='text-center' " 
+            . ($status == $order['status'] ? 'selected' : '') 
+            . ">{$status}</option>";
+        }
+        echo "</select></form>";
+        echo "</td>";
         echo 
         "<td style='text-align: center;'>
             <a class='btn btn-info' href='./showOrdersAdmin.php?order={$order['id']}" . buildQueryString() . "'>Details</a>
