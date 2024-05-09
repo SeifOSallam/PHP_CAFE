@@ -30,8 +30,13 @@ function getOneProduct($id){
 
 if(!empty($_GET['id']) && ($_GET['action']=="delete")){
     $std_id = $_GET['id'];
-    deleteProduct($std_id);
-    header("Location: ../Views/showProducts.php");
+    $errors = [];
+    if(!deleteProduct($std_id)){
+        $errors = "can't delete it have order by this product";
+        header("Location: ../Views/showProducts.php?errors={$errors}");
+    }else{
+       header("Location: ../Views/showProducts.php");
+    }
 }
 
 function getProductsCount(){
