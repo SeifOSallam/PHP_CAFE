@@ -61,7 +61,7 @@ $count = $count[0]['count'];
 if(isset($_GET['error'])) 
 {
     echo '<div class="alert alert-warning alert-dismissible fade show" role="alert">
-            <strong>Error !</strong> Can not order when cart is empty :)
+            <strong>Error !</strong>'.$_GET['error'].'
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>';
 } 
@@ -126,7 +126,7 @@ if(isset($_GET['success']))
                     <?php 
                     foreach ($products as $product)
                     {
-                    product_card($user_id,$role,$product['id'],$product['image'],$product['name'],$product['category'],$product['price']);
+                    product_card($user_id,$role,$product['id'],$product['image'],$product['name'],$product['category'],$product['price'],$product['stock']);
                     }
                     ?>
                 </div>

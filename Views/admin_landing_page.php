@@ -17,6 +17,12 @@ if(!isset($_GET['page']))
 $user_id = $_SESSION['id'];
 $role = $_SESSION['role'];
 
+if($role !== 'admin' && !is_null($_SESSION))
+{
+    header("Location:home.php");
+    exit();
+}
+
 $cartItems = $database->getUserItems('cart',$user_id);
 
 $rooms = $database->select('rooms');
@@ -52,7 +58,7 @@ $count = $count[0]['count'];
 if(isset($_GET['error'])) 
 {
     echo '<div class="alert alert-warning alert-dismissible fade show" role="alert">
-            <strong>Error !</strong> Can not order when cart is empty :)
+            <strong>Error !  </strong>  '.$_GET['error'].'
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>';
 }
@@ -127,10 +133,11 @@ if(isset($_GET['success']))
             <div class='row'>
                 <!-- Products -->
                 <div class="row">
-                    <?php 
+                    <?php
+                    var_dump($products); 
                     foreach ($products as $product)
                     {
-                    product_card($user_id,$role,$product['id'],$product['image'],$product['name'],$product['category'],$product['price']);
+                    product_card($user_id,$role,$product['id'],$product['image'],$product['name'],$product['category'],$product['price'],$product['stock']);
                     }
                     ?>
                 </div>

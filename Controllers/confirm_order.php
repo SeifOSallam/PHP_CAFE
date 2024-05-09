@@ -38,7 +38,7 @@ foreach ($cartItems as $item)
     $database->deleteItem('cart',$product_id,$user_id);
 }
 
-header('Location:../Views/admin_landing_page.php?success="Order placed successfully"');
+header('Location:../Views/admin_landing_page.php?success=Order placed successfully');
 }
 
 else
@@ -48,7 +48,7 @@ else
 
 if ($total_amount == 0 )
 {
-    header('Location:../Views/home.php?error="Your cart is empty"');
+    header('Location:../Views/home.php?error=Your cart is empty');
     exit();
 }
 
@@ -68,7 +68,7 @@ foreach ($cartItems as $item)
     $database->deleteItem('cart',$product_id,$user_id);
 }
 
-header("Location:../Views/home.php");
+header('Location:../Views/home.php?success=Order placed successfully');
 }
 
 
