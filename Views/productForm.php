@@ -31,44 +31,77 @@ $categories = selectCategories();
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   
   <style>
+      
+  .container {
+    position: relative;
+    margin-top: 50px;
+  }
+  
+  .form-container {
+    max-width: 600px;
+    margin: auto;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+  }
 
-    .container {
-      position: relative;
-      margin-top: 90px; 
-      height: 100vh;
-    }
-    .form-container {
-      max-width: 600px;
-      margin: auto;
-      padding: 30px;
-      background-color: #fff;
-      border-radius: 10px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.2);
-    }
-    .form-container h2 {
-      text-align: center;
-    }
-    .bg-image {
-      background-image: url('your-image.jpg');
-      background-size: cover;
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -1;
-      filter: blur(5px); 
-    }
-    .modal-dialog.modal-dialog-centered {
-        display: flex;
-        align-items: center;
-        min-height: calc(100% - 3.5rem); 
-    }
+  .form-container h2 {
+    text-align: center;
+    margin-bottom: 30px;
+  }
 
-    .modal-content {
-        margin: auto;
-    }
-  </style>
+  .form-group label {
+    font-weight: bold;
+  }
+
+  .form-group input[type="text"],
+  .form-group input[type="number"],
+  .form-group select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    height: 50px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+  }
+
+  .form-group input[type="file"] {
+    border: none;
+    margin-bottom: 10px;
+  }
+
+  .form-group button[type="submit"],
+  .form-group button[type="reset"] {
+    width: 49%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .form-group button[type="submit"] {
+    background-color: #007bff;
+    color: #fff;
+  }
+
+  .form-group button[type="reset"] {
+    background-color: #6c757d;
+    color: #fff;
+  }
+
+  .form-group .text-danger {
+    margin-top: 5px;
+  }
+
+  .form-group input[type="text"][name="price"],
+  .form-group input[type="number"][name="stock"] {
+    width: 30%; 
+  }
+</style>
+
+
+ 
 </head>
 <body>
 <?php require '../Components/navbar.php';
@@ -104,7 +137,7 @@ $categories = selectCategories();
           <?php if (!empty($errors['category'])) echo "<div class='text-danger'>{$errors['category']}</div>"; ?> 
         </div>
         <div class="col-sm-2">
-          <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#addCategoryModal">Add Category</button>
+          <button type="button" class="btn btn-primary  btn-sm" data-toggle="modal" data-target="#addCategoryModal">Add Category</button>
        </div>
     </div>
     <div class="form-group">
@@ -151,7 +184,7 @@ $categories = selectCategories();
                        
                     </div>
                     
-                    <button type="submit" class="btn btn-primary">Add</button>
+                    <button type="submit" class="btn btn-primary"> Add</button>
                 </form>
             </div>
         </div>
