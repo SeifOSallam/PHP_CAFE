@@ -12,6 +12,16 @@ if(!is_null($_POST['user']))
 {
 $another_user = (int)$_POST['user'];
 
+// check if cart is empty
+
+if ($total_amount == 0 )
+{
+    header('Location:../Views/admin_landing_page.php?error="Your cart is empty"');
+    exit();
+}
+
+
+
 // create order 
 $order_id = $database->insert('orders','user_id,total_amount,notes,room_id,order_date,status',"'$another_user',$total_amount,'$note',$room_id,'$date','Processing'");
 
@@ -28,11 +38,20 @@ foreach ($cartItems as $item)
     $database->deleteItem('cart',$product_id,$user_id);
 }
 
-header("Location:../Views/admin_landing_page.php");
+header('Location:../Views/admin_landing_page.php?success="Order placed successfully"');
 }
 
 else
 {
+
+// check if cart is empty
+
+if ($total_amount == 0 )
+{
+    header('Location:../Views/home.php?error="Your cart is empty"');
+    exit();
+}
+
 // create order 
 $order_id = $database->insert('orders','user_id,total_amount,notes,room_id,order_date,status',"'$user_id',$total_amount,'$note',$room_id,'$date','Processing'");
 
