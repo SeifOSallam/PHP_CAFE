@@ -17,7 +17,7 @@ function buildQueryString() {
     }
     return $queryString;
 }
-function buildQueryStringWithCheck() {
+function buildQueryStringWithOrder() {
     $queryString = "";
     if (isset($_GET['user'])) {
         $queryString .= "&user=" . $_GET['user'];
@@ -28,8 +28,8 @@ function buildQueryStringWithCheck() {
     if (isset($_GET['date_to'])) {
         $queryString .= "&date_to=" . $_GET['date_to'];
     }
-    if (isset($_GET['check'])) {
-        $queryString .= "&check=" . $_GET['check'];
+    if (isset($_GET['order'])) {
+        $queryString .= "&order=" . $_GET['order'];
     }
     return $queryString;
 }
@@ -76,14 +76,18 @@ function displayOrdersTable($data, $users, $currentPage, $totalPages, $filters){
         echo "<td style='text-align: center;'>{$order['room_number']}</td>";
         echo "<td style='text-align: center;'>{$order['total_amount']}</td>";
         echo "<td style='text-align: center;'>";
-        echo "<form><select class='form-select w-75 mx-auto'>";
+        echo "<form action='../Controllers/order_status.php' method='GET'>";
+        echo "<input type='hidden' name='id' value='{$order['id']}'>";
+        echo "<select class='form-select w-75 mx-auto' name='status' onchange='this.form.submit()'>";
+
         $statuses = array("Out for delivery", "Processing", "Done", "Cancelled");
+
         foreach ($statuses as $status) {
-            echo "<option class='text-center' " 
-            . ($status == $order['status'] ? 'selected' : '') 
-            . ">{$status}</option>";
+            echo "<option class='text-center' value='{$status}'" . ($status == $order['status'] ? ' selected' : '') . ">{$status}</option>";
         }
-        echo "</select></form>";
+
+        echo "</select>";
+        echo "</form>";
         echo "</td>";
         echo 
         "<td style='text-align: center;'>

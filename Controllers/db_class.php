@@ -493,7 +493,7 @@ class Database {
 
     public function getAllOrders($page, $filters) {
         $query = 
-                "SELECT users.username, SUM(orders.total_amount) as total_amount, users.id,
+                "SELECT users.username, orders.total_amount, users.id,
                 rooms.room_number, orders.status, orders.order_date
                 FROM orders 
                 INNER JOIN users ON orders.user_id = users.id
@@ -511,8 +511,7 @@ class Database {
             $whereClause .= ($whereClause ? " AND" : " WHERE") . " orders.order_date <= '{$filters['date_to']}'";
         }
     
-        $query .= $whereClause . "GROUP BY users.id LIMIT 6 OFFSET " . (($page - 1) * 6);
-    
+        $query .= $whereClause . "LIMIT 6 OFFSET " . (($page - 1) * 6);
         $statement = $this->connection->prepare($query);
     
         try {

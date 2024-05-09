@@ -25,7 +25,10 @@ function getUsers() {
     global $database;
     return $database->select('users');
 }
-
+function updateOrder($id, $status) {
+    global $database;
+    $database->update("orders", $id, "status='{$status}'");
+}
 function CancelOrder($id){
     global $database;
     $database->update("orders", $id, "status='Cancelled'");
