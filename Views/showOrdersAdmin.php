@@ -1,36 +1,24 @@
 <?php 
-include "../Controllers/order.php";
-session_start();
+    include "../Controllers/order.php";
+    require "../Components/adminOrdersTable.php";
+    require '../Components/navbar.php';
+    session_start();
 
-if(!is_null($_SESSION) && $_SESSION['role'] === 'user')
-{
-    header('Location:home.php');
-}
-
-if (isset($_GET['cancelled'])) {
-    $cancelledOrderId = $_GET['cancelled'];
-    CancelOrder($cancelledOrderId);
-}
-
-if (isset($_POST['start_date']) && isset($_POST['end_date'])) {
-    $orders = getAllOrdersWithDate($_POST['start_date'], $_POST['end_date']);
-} else {
-    if(isset($_GET['page']))
-    {
-        $orders = getAllOrdersWithPage($_GET['page']);
-    }
+    user_navbar($_SESSION['username'],$_SESSION['image'],$_SESSION['role']);
     
-    if(!isset($_GET['page']))
-    {
-        $orders = getAllOrdersWithPage(1);
+    $currPage = empty($_GET['page'])? 1 : $_GET['page'];
+    $filters = array();
+    if (!empty($_GET['date_from'])) {
+        $filters['date_from'] = $_GET['date_from'];
     }
-
-    if (isset($_GET['details']) && $_GET['details'] === 'true' && isset($_GET['orderId'])) {
-        $orderId = $_GET['orderId'];
-        $orderDetails = getOrderDetailsByOrderId($orderId);
+    if (!empty($_GET['date_to'])) {
+        $filters['date_to'] = $_GET['date_to'];
     }
-}
-
+    if (!empty($_GET['user'])) {
+        $filters['user'] = $_GET['user'];
+    }
+    $orders = getAllOrders($currPage, $filters);
+    $users = getUsers();
 ?>
 
 <!DOCTYPE html>
@@ -67,91 +55,10 @@ if (isset($_POST['start_date']) && isset($_POST['end_date'])) {
     </style>
 </head>
 <body>
-<?php require '../Components/navbar.php';
-      user_navbar($_SESSION['username'],$_SESSION['image'],$_SESSION['role']);
+<?php 
+    displayOrdersTable($orders, $users, $currPage, floor((count($orders)/6)+1), $filters);
 ?>
 
-<div class="container text-center container-margin-top"> 
-    <form method="post" action="showOrdersAdmin.php">
-        <label for="start">From:</label>
-        <input type="date" id="start" name="start_date" value="<?php echo date('Y-m-d'); ?>"  placeholder="YYYY-MM-DD" required>
-        <label for="end">To:</label>
-        <input type="date" id="end" name="end_date" value="<?php echo date('Y-m-d'); ?>"  placeholder="YYYY-MM-DD" required>
-        <input type="submit" value="Filter">
-    </form>
-        <table class="table">
-        <thead class="thead-dark">
-            <tr>
-                <th scope="col">Order Date</th>
-                <th scope="col">Total Price</th>
-                <th scope="col">Status</th>
-                <th scope="col">Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($orders as $order): ?>
-                <tr>
-                    <td><?php echo $order['order_date']; ?></td>
-                    <td><?php echo $order['total_amount']; ?></td>
-                    <td><?php echo $order['status']; ?></td>
-                    <td>
-                        <?php if ($order['status'] === 'Processing'): ?>
-                            <button class="btn btn-danger cancel-btn" data-order-id="<?php echo $order['id']; ?>">
-                                <a href="../Controllers/order.php?cancelled=<?php echo $order['id']; ?>" style="text-decoration: none; color: white;">Cancel</a>
-                            </button>
-                        <?php endif; ?>
-                        <a class="btn btn-info details-btn" href="?details=true&orderId=<?php echo $order['id']; ?>">Show Details</a>
-                    </td>
-                </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
-
-</div>
-
-<div class="container">
-    <div class="row">
-        <?php if (!empty($orderDetails)): ?>
-            <?php foreach ($orderDetails as $detail): ?>
-                <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-                    <div class="card">
-                        <img src="../assets/images/<?php echo $detail['image']; ?>" alt="<?php echo $detail['product_name']; ?>" style="width:100%; height: 200px;">
-                        <div class="container">
-                            <h4><b><?php echo $detail['product_name']; ?></b></h4>
-                            <p><strong>Quantity:</strong> <?php echo $detail['quantity']; ?></p>
-                            <p><strong>Price:</strong> $<?php echo $detail['product_price']; ?></p>
-                        </div>
-                    </div>
-                </div>
-            <?php endforeach; ?>
-            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-                        <div class="total-price">
-                            <h5>Total Price:</h5>
-                            <p>$<?php echo  $detail["total_amount"].'$'; ?></p>
-                        </div>
-            </div>
-        <?php endif; ?>
-      
-    </div>
-    <div class="inline-block text-center">
-                <?php
-                for ($i=1 ; $i <= (20/6)+1; $i++)
-                {
-                    echo "<a href='?page=$i' class='btn btn-primary mx-2'>$i</a>";
-                }
-                ?>
-    </div>
-</div>
-<script>
-    function toggleOrderDetails(orderId) {
-        var orderDetails = document.getElementById("order-details-" + orderId);
-        if (orderDetails.style.display === "none") {
-            orderDetails.style.display = "block";
-        } else {
-            orderDetails.style.display = "none";
-        }
-    }
-</script>
 
 </body>
 </html>

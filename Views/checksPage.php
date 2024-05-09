@@ -38,7 +38,7 @@
 </head>
 <body>
         <?php 
-            displayChecksTable($data, $users, $currPage, ceil((count($data)+1)/6), $filters);
+            displayChecksTable($data, $users, $currPage, floor((count($data)/6)+1), $filters);
             if (!count($data)) {
                 echo "
                 <div class='container w-50 mx-auto mt-5'>

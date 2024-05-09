@@ -1,5 +1,5 @@
 <?php
-require_once '../Controllers/checks.php';
+require_once '../Controllers/order.php';
 require_once 'pagination.php';
 require 'order_product.php';
 
@@ -33,7 +33,7 @@ function buildQueryStringWithCheck() {
     }
     return $queryString;
 }
-function displayChecksTable($data, $users, $currentPage, $totalPages, $filters){
+function displayOrdersTable($data, $users, $currentPage, $totalPages, $filters){
     echo "<div class='container w-75 mx-auto' style='margin-top:10rem;'>";
     echo 
     "<form class='row'>
@@ -62,21 +62,27 @@ function displayChecksTable($data, $users, $currentPage, $totalPages, $filters){
     echo "<table class='table table-striped'>";
     echo 
     "<tr>
-        <th style='text-align: center;'>Name</th>
-        <th style='text-align: center;'>Total Amount</th>
-        <th></th>
+        <th class='text-center'>Order Date</th>
+        <th class='text-center'>Name</th>
+        <th class='text-center'>Room</th>
+        <th class='text-center'>Total Amount</th>
+        <th class='text-center'>Status</th>
+        <th class='text-center'>Actions</th>
     </tr>";
-    foreach ($data as $check) {
+    foreach ($data as $order) {
         echo "<tr>";
-        echo "<td style='text-align: center;'>{$check['username']}</td>";
-        echo "<td style='text-align: center;'>{$check['total_amount']}</td>";
+        echo "<td style='text-align: center;'>{$order['order_date']}</td>";
+        echo "<td style='text-align: center;'>{$order['username']}</td>";
+        echo "<td style='text-align: center;'>{$order['room_number']}</td>";
+        echo "<td style='text-align: center;'>{$order['total_amount']}</td>";
+        echo "<td style='text-align: center;'>{$order['status']}</td>";
         echo 
         "<td style='text-align: center;'>
-            <a class='btn btn-info' href='./checksPage.php?check={$check['id']}" . buildQueryString() . "'>Details</a>
+            <a class='btn btn-info' href='./showOrdersAdmin.php?order={$order['id']}" . buildQueryString() . "'>Details</a>
         </td>";
         echo "</tr>";
-        if(!empty($_GET['check']) && $_GET['check'] == $check['id']) {
-            displayUserOrdersTable($check['id'], $filters);
+        if(!empty($_GET['check']) && $_GET['check'] == $order['id']) {
+            displayUserOrdersTable($order['id'], $filters);
         }
     }
     echo "</table>";
