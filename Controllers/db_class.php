@@ -444,7 +444,7 @@ class Database {
     public function getOrdersOnlyForUserWithPage($userId, $page)
     {
         $database = Database::getInstance();
-        $limit = 4;
+        $limit = 6;
         $offset = ($page - 1) * $limit;
     
         $query = 'SELECT id , order_date, total_amount, notes, room_id, status
@@ -468,7 +468,28 @@ class Database {
             return false; 
         }
     }
-    
+   
+    public function orderCount($userId)
+      {
+    $database = Database::getInstance();
+
+    $query = 'SELECT COUNT(*) AS order_count
+              FROM orders
+              WHERE user_id = :userId';
+
+    $stmt = $this->connection->prepare($query);
+    $stmt->bindParam(':userId', $userId, PDO::PARAM_INT);
+
+    try {
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['order_count'];
+    } catch (PDOException $e) {
+        // Log the error instead of echoing
+        error_log("Error fetching order count: " . $e->getMessage());
+        return false; 
+    }
+     }
     public function getOrderDetailsByOrderId($orderId){
         $database = Database::getInstance();
         $query = 'SELECT o.id AS order_id, o.order_date, o.total_amount, o.notes, o.room_id, o.status, oi.quantity, p.name AS product_name, p.price AS product_price, p.image as image 

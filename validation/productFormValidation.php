@@ -51,7 +51,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST"&& empty($_POST['id'])) {
     $price = $_POST['price'];
     if (empty($_POST['price'])) {
         $errors['price'] = "price is required";
-    } 
+    } elseif ($_POST['price'] < 0) {
+        $errors['price'] = "Price cannot be negative.";
+    }
     $stock = $_POST['stock'];
 
     if (empty($_POST['stock'])&$_POST['stock']!=0) {
@@ -66,7 +68,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST"&& empty($_POST['id'])) {
         $category_id = $_POST['category'];
         $price = $_POST['price'];
         insertProduct($name, $price, $category_id, $stock, $filename);
-        header("Location: ../Views/home.php");
+        header("Location: ../Views/showProducts.php");
     } 
 } else if($_SERVER["REQUEST_METHOD"] === "POST"&& !empty($_POST['id'])){
     $id=$_POST['id'];
@@ -94,7 +96,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST"&& empty($_POST['id'])) {
     $price = $_POST['price'];
     if (empty($_POST['price'])) {
         $errors['price'] = "price is required";
-    } 
+    }  elseif ($_POST['price'] < 0) {
+        $errors['price'] = "Price cannot be negative.";
+    }
     $stock = $_POST['stock'];
     if (empty($_POST['stock'])&$_POST['stock']!=0) {
         $errors['stock'] = "stock is required";
