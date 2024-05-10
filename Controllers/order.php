@@ -34,10 +34,12 @@ function getOrderDetailsByOrderId($orderId){
     global $database;
     return $database->getOrderDetailsByOrderId($orderId);
 }
+
 if (isset($_GET['cancelled'])) {
     $cancelledOrderId = $_GET['cancelled'];
     CancelOrder($cancelledOrderId);
     header("Location: ../Views/showOrdersAdmin.php");
 }
+
 
 ?>
