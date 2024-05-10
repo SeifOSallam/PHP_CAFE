@@ -1,40 +1,12 @@
 <?php
 require_once '../Controllers/checks.php';
 require_once 'pagination.php';
+require 'filterBuilder.php';
 require 'order_product.php';
 
 
-function buildQueryString() {
-    $queryString = "";
-    if (isset($_GET['user'])) {
-        $queryString .= "&user=" . $_GET['user'];
-    }
-    if (isset($_GET['date_from'])) {
-        $queryString .= "&date_from=" . $_GET['date_from'];
-    }
-    if (isset($_GET['date_to'])) {
-        $queryString .= "&date_to=" . $_GET['date_to'];
-    }
-    return $queryString;
-}
-function buildQueryStringWithCheck() {
-    $queryString = "";
-    if (isset($_GET['user'])) {
-        $queryString .= "&user=" . $_GET['user'];
-    }
-    if (isset($_GET['date_from'])) {
-        $queryString .= "&date_from=" . $_GET['date_from'];
-    }
-    if (isset($_GET['date_to'])) {
-        $queryString .= "&date_to=" . $_GET['date_to'];
-    }
-    if (isset($_GET['check'])) {
-        $queryString .= "&check=" . $_GET['check'];
-    }
-    return $queryString;
-}
 function displayChecksTable($data, $users, $currentPage, $totalPages, $filters){
-    echo "<div class='container w-75 mx-auto' style='margin-top:10rem;'>";
+    echo "<div class='container w-75 mx-auto' style='margin-top:2.5rem;'>";
     echo 
     "<form class='row'>
         <div class='col-lg-3 col-sm-6'>
@@ -121,9 +93,9 @@ function displayOrderItemsTable($orderId) {
     echo "</table>
             </div>
             <div class='container'>
-                <div class='row row-cols-1 row-cols-md-3 g-4'>";
+                <div class='row'>";
             foreach ($ordersDetails as $details) {
-                echo "<div class='col'>";
+                echo "<div class='col-lg-3 col-md-6 col-sm-12'>";
                 product_card($details['product_name'], $details['product_price'], $details['quantity'],"../assets/{$details['image']}");
                 echo "</div>";
             }

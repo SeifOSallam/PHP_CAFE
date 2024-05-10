@@ -1,40 +1,12 @@
 <?php
 require_once '../Controllers/order.php';
 require_once 'pagination.php';
+require 'filterBuilder.php';
 require 'order_product.php';
 
 
-function buildQueryString() {
-    $queryString = "";
-    if (isset($_GET['user'])) {
-        $queryString .= "&user=" . $_GET['user'];
-    }
-    if (isset($_GET['date_from'])) {
-        $queryString .= "&date_from=" . $_GET['date_from'];
-    }
-    if (isset($_GET['date_to'])) {
-        $queryString .= "&date_to=" . $_GET['date_to'];
-    }
-    return $queryString;
-}
-function buildQueryStringWithOrder() {
-    $queryString = "";
-    if (isset($_GET['user'])) {
-        $queryString .= "&user=" . $_GET['user'];
-    }
-    if (isset($_GET['date_from'])) {
-        $queryString .= "&date_from=" . $_GET['date_from'];
-    }
-    if (isset($_GET['date_to'])) {
-        $queryString .= "&date_to=" . $_GET['date_to'];
-    }
-    if (isset($_GET['order'])) {
-        $queryString .= "&order=" . $_GET['order'];
-    }
-    return $queryString;
-}
 function displayOrdersTable($data, $users, $currentPage, $totalPages, $filters){
-    echo "<div class='container w-75 mx-auto' style='margin-top:10rem;'>";
+    echo "<div class='container w-75 mx-auto' style='margin-top:2.5rem;'>";
     echo 
     "<form class='row'>
         <div class='col-lg-3 col-sm-6'>
@@ -77,7 +49,14 @@ function displayOrdersTable($data, $users, $currentPage, $totalPages, $filters){
         echo "<td style='text-align: center;'>{$order['total_amount']}</td>";
         echo "<td style='text-align: center;'>";
         echo "<form action='../Controllers/order_status.php' method='GET'>";
+        $userparam = empty($_GET['user'])? '' : $_GET['user'];
+        $datefromparam = empty($_GET['date_from'])? '' : $_GET['date_from'];
+        $datetoparam = empty($_GET['date_to'])? '' : $_GET['date_to'];
         echo "<input type='hidden' name='id' value='{$order['id']}'>";
+        echo "<input type='hidden' name='page' value='{$currentPage}'>";
+        echo "<input type='hidden' name='user' value='{$userparam}'>";
+        echo "<input type='hidden' name='date_from' value='{$datefromparam}'>";
+        echo "<input type='hidden' name='date_to' value='{$datetoparam}'>";
         echo "<select class='form-select w-75 mx-auto' name='status' onchange='this.form.submit()'>";
 
         $statuses = array("Out for delivery", "Processing", "Done", "Cancelled");

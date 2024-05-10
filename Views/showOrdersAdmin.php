@@ -18,6 +18,7 @@
         $filters['user'] = $_GET['user'];
     }
     $orders = getAllOrders($currPage, $filters);
+    $totalPages = floor(getOrdersCount($filters)[0]['count']/6)+1;
     $users = getUsers();
 ?>
 
@@ -56,7 +57,7 @@
 </head>
 <body>
 <?php 
-    displayOrdersTable($orders, $users, $currPage, floor((count($orders)/6)+1), $filters);
+    displayOrdersTable($orders, $users, $currPage, $totalPages, $filters);
 ?>
 
 

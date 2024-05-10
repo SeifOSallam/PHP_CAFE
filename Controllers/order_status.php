@@ -1,8 +1,8 @@
 <?php
     require "order.php";
-    
+    require_once '../Components/filterBuilder.php';
     updateOrder($_GET['id'], $_GET['status']);
-
-    header('Location: ../Views/showOrdersAdmin.php');
+    $page = empty($_GET['page'])? 1 : $_GET['page'];
+    header("Location: ../Views/showOrdersAdmin.php?page={$page}" . buildQueryString());
 
 ?>

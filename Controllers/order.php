@@ -37,6 +37,10 @@ function getOrderDetailsByOrderId($orderId){
     global $database;
     return $database->getOrderDetailsByOrderId($orderId);
 }
+function getOrdersCount($filters) {
+    global $database;
+    return $database->getOrdersCount($filters);
+}
 if (isset($_GET['cancelled'])) {
     $cancelledOrderId = $_GET['cancelled'];
     CancelOrder($cancelledOrderId);

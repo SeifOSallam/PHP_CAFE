@@ -493,7 +493,7 @@ class Database {
 
     public function getAllOrders($page, $filters) {
         $query = 
-                "SELECT users.username, orders.total_amount, users.id,
+                "SELECT users.username, orders.total_amount, orders.id, users.id as user_id,
                 rooms.room_number, orders.status, orders.order_date
                 FROM orders 
                 INNER JOIN users ON orders.user_id = users.id
@@ -512,6 +512,37 @@ class Database {
         }
     
         $query .= $whereClause . "LIMIT 6 OFFSET " . (($page - 1) * 6);
+        $statement = $this->connection->prepare($query);
+    
+        try {
+            $statement->execute();
+            $checks = $statement->fetchAll(PDO::FETCH_ASSOC);
+            return $checks;
+        } catch (PDOException $e) {
+            return "Error: " . $e->getMessage();
+        }
+    }
+
+    public function getOrdersCount($filters) {
+        $query = 
+                "SELECT COUNT(*) as count
+                FROM orders 
+                INNER JOIN users ON orders.user_id = users.id
+                INNER JOIN rooms ON orders.room_id = rooms.id
+                ";
+    
+        $whereClause = "";
+        if (isset($filters['user'])) {
+            $whereClause .= " WHERE users.username = '{$filters['user']}'";
+        }
+        if (isset($filters['date_from'])) {
+            $whereClause .= ($whereClause ? " AND" : " WHERE") . " orders.order_date >= '{$filters['date_from']}'";
+        }
+        if (isset($filters['date_to'])) {
+            $whereClause .= ($whereClause ? " AND" : " WHERE") . " orders.order_date <= '{$filters['date_to']}'";
+        }
+    
+        $query .= $whereClause;
         $statement = $this->connection->prepare($query);
     
         try {
