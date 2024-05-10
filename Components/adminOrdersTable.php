@@ -70,7 +70,7 @@ function displayOrdersTable($data, $users, $currentPage, $totalPages, $filters){
         echo "</td>";
         echo 
         "<td style='text-align: center;'>
-            <a class='btn btn-info' href='./showOrdersAdmin.php?order={$order['id']}" . buildQueryString() . "'>Details</a>
+            <a class='btn btn-info' href='./showOrdersAdmin.php?page={$currentPage}&order={$order['id']}" . buildQueryString() . "'>Details</a>
         </td>";
         echo "</tr>";
         if(!empty($_GET['order']) && $_GET['order'] == $order['id']) {
