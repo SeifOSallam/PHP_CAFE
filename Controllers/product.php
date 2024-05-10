@@ -30,12 +30,13 @@ function getOneProduct($id){
 
 if(!empty($_GET['id']) && ($_GET['action']=="delete")){
     $std_id = $_GET['id'];
-    $errors = [];
+    $error = [];
     if(!deleteProduct($std_id)){
-        $errors = "can't delete it have order by this product";
-        header("Location: ../Views/showProducts.php?errors={$errors}");
+        $error = "I can't delete this product because there are orders associated with it.";
+        header("Location: ../Views/showProducts.php?error={$error}");
     }else{
-       header("Location: ../Views/showProducts.php");
+        $success = "I can't delete this product because there are orders associated with it.";
+       header("Location: ../Views/showProducts.php?success={ $success}");
     }
 }
 
