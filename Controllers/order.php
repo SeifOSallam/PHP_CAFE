@@ -16,16 +16,19 @@ function getOrdersOnlyForUserDate($userId, $startDate, $endDate){
     return $database->getOrdersOnlyForUserDate($userId, $startDate, $endDate);
 }
 
-function getAllOrdersWithPage($page){
+function getAllOrders($page, $filters) {
     global $database;
-    return $database->getAllOrdersWithPage($page);
+    return $database->getAllOrders($page, $filters);
 }
 
-function getAllOrdersWithDate($startDate, $endDate){
+function getUsers() {
     global $database;
-    return $database->getAllOrdersWithDate($startDate, $endDate);
+    return $database->select('users');
 }
-
+function updateOrder($id, $status) {
+    global $database;
+    $database->update("orders", $id, "status='{$status}'");
+}
 function CancelOrder($id){
     global $database;
     $database->update("orders", $id, "status='Cancelled'");
@@ -33,6 +36,10 @@ function CancelOrder($id){
 function getOrderDetailsByOrderId($orderId){
     global $database;
     return $database->getOrderDetailsByOrderId($orderId);
+}
+function getOrdersCount($filters) {
+    global $database;
+    return $database->getOrdersCount($filters);
 }
 if (isset($_GET['cancelled'])) {
     $cancelledOrderId = $_GET['cancelled'];
