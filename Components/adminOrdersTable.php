@@ -89,9 +89,9 @@ function displayOrderItemsTable($orderId) {
     echo "</table>
             </div>
             <div class='container'>
-                <div class='row row-cols-1 row-cols-md-3 g-4'>";
+                <div class='row'>";
             foreach ($ordersDetails as $details) {
-                echo "<div class='col'>";
+                echo "<div class='col-lg-3 col-md-6 col-sm-12'>";
                 product_card($details['product_name'], $details['product_price'], $details['quantity'],"../assets/{$details['image']}");
                 echo "</div>";
             }
