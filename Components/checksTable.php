@@ -1,39 +1,12 @@
 <?php
 require_once '../Controllers/checks.php';
+require_once 'pagination.php';
+require 'filterBuilder.php';
 require 'order_product.php';
 
 
-function buildQueryString() {
-    $queryString = "";
-    if (isset($_GET['user'])) {
-        $queryString .= "&user=" . $_GET['user'];
-    }
-    if (isset($_GET['date_from'])) {
-        $queryString .= "&date_from=" . $_GET['date_from'];
-    }
-    if (isset($_GET['date_to'])) {
-        $queryString .= "&date_to=" . $_GET['date_to'];
-    }
-    return $queryString;
-}
-function buildQueryStringWithCheck() {
-    $queryString = "";
-    if (isset($_GET['user'])) {
-        $queryString .= "&user=" . $_GET['user'];
-    }
-    if (isset($_GET['date_from'])) {
-        $queryString .= "&date_from=" . $_GET['date_from'];
-    }
-    if (isset($_GET['date_to'])) {
-        $queryString .= "&date_to=" . $_GET['date_to'];
-    }
-    if (isset($_GET['check'])) {
-        $queryString .= "&check=" . $_GET['check'];
-    }
-    return $queryString;
-}
 function displayChecksTable($data, $users, $currentPage, $totalPages, $filters){
-    echo "<div class='container w-75 mx-auto' style='margin-top:10rem;'>";
+    echo "<div class='container w-75 mx-auto' style='margin-top:2.5rem;'>";
     echo 
     "<form class='row'>
         <div class='col-lg-3 col-sm-6'>
@@ -45,15 +18,15 @@ function displayChecksTable($data, $users, $currentPage, $totalPages, $filters){
                 echo "
             </select>
         </div>
-        <div class='col-lg-3 col-sm-6 d-flex justify-content-center'>
+        <div class='col-lg-3 col-sm-6 d-flex justify-content-center align-items-center'>
             <label for='date_from'>From: </label>
             <input class='form-control' type='date' id='date_from' name='date_from'>
         </div>
-        <div class='col-lg-3 col-sm-6 d-flex justify-content-center'>
+        <div class='col-lg-3 col-sm-6 d-flex justify-content-center align-items-center'>
             <label for='date_to'>To: </label>
             <input class='form-control' type='date' id='date_to' name='date_to'>
         </div>
-        <div class='col-lg-3 col-sm-6'>
+        <div class='col-lg-3 col-sm-6 d-flex justify-content-center'>
             <input class='btn btn-info' type='submit' value='Filter'>
         </div>
 
@@ -79,29 +52,8 @@ function displayChecksTable($data, $users, $currentPage, $totalPages, $filters){
         }
     }
     echo "</table>";
+    paginate($currentPage, $totalPages, buildQueryString());
 
-    echo "<nav aria-label='Page navigation example' class='d-flex justify-content-center'>
-        <ul class='pagination'>";
-        if ($currentPage > 1) {
-            $firstLink = "?page=1" . buildQueryString();
-            echo "<li class='page-item'><a class='page-link' href='$firstLink'>First</a></li>";
-            $prevLink = "?page=".($currentPage - 1) . buildQueryString();
-            echo "<li class='page-item'><a class='page-link' href='$prevLink'>Previous</a></li>";
-        }
-        
-        for ($i = 1; $i <= $totalPages; $i++) {
-            $pageLink = "?page=".$i . buildQueryString();
-            echo "<li class='page-item ".($currentPage == $i ? 'active' : '')."'><a class='page-link' href='$pageLink'>".$i."</a></li>";
-        }
-        
-        if ($currentPage < $totalPages) {
-            $nextLink = "?page=".($currentPage + 1) . buildQueryString();
-            echo "<li class='page-item'><a class='page-link' href='$nextLink'>Next</a></li>";
-            $lastLink = "?page=".$totalPages . buildQueryString();
-            echo "<li class='page-item'><a class='page-link' href='$lastLink'>Last</a></li>";
-        }
-    echo "</ul>
-    </nav>";
     echo "</div>";
 }
 
@@ -141,9 +93,9 @@ function displayOrderItemsTable($orderId) {
     echo "</table>
             </div>
             <div class='container'>
-                <div class='row row-cols-1 row-cols-md-3 g-4'>";
+                <div class='row'>";
             foreach ($ordersDetails as $details) {
-                echo "<div class='col'>";
+                echo "<div class='col-lg-3 col-md-6 col-sm-12'>";
                 product_card($details['product_name'], $details['product_price'], $details['quantity'],"../assets/{$details['image']}");
                 echo "</div>";
             }

@@ -512,50 +512,66 @@ class Database {
         }
      }
 
-     public function getAllOrdersWithDate($startDate, $endDate){ 
-        $database = Database::getInstance();
-        $query = 'SELECT id , order_date, total_amount, notes, room_id, status
+    public function getAllOrders($page, $filters) {
+        $query = 
+                "SELECT users.username, orders.total_amount, orders.id, users.id as user_id,
+                rooms.room_number, orders.status, orders.order_date
                 FROM orders 
-                WHERE order_date >= :startDate
-                AND order_date <= :endDate ';
-        
-        $stmt = $this->connection->prepare($query);
-        $stmt->bindParam(':startDate', $startDate, PDO::PARAM_STR);
-        $stmt->bindParam(':endDate', $endDate, PDO::PARAM_STR);
-
+                INNER JOIN users ON orders.user_id = users.id
+                INNER JOIN rooms ON orders.room_id = rooms.id
+                ";
+    
+        $whereClause = "";
+        if (isset($filters['user'])) {
+            $whereClause .= " WHERE users.username = '{$filters['user']}'";
+        }
+        if (isset($filters['date_from'])) {
+            $whereClause .= ($whereClause ? " AND" : " WHERE") . " orders.order_date >= '{$filters['date_from']}'";
+        }
+        if (isset($filters['date_to'])) {
+            $whereClause .= ($whereClause ? " AND" : " WHERE") . " orders.order_date <= '{$filters['date_to']}'";
+        }
+    
+        $query .= $whereClause . "LIMIT 6 OFFSET " . (($page - 1) * 6);
+        $statement = $this->connection->prepare($query);
+    
         try {
-            $stmt->execute();
-            $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            return $res;
+            $statement->execute();
+            $checks = $statement->fetchAll(PDO::FETCH_ASSOC);
+            return $checks;
         } catch (PDOException $e) {
-            echo $e->getMessage();
-            return false; 
+            return "Error: " . $e->getMessage();
         }
     }
 
-    public function getAllOrdersWithPage($page)
-    {
-        $database = Database::getInstance();
-        $limit = 6;
-        $offset = ($page - 1) * $limit;
+    public function getOrdersCount($filters) {
+        $query = 
+                "SELECT COUNT(*) as count
+                FROM orders 
+                INNER JOIN users ON orders.user_id = users.id
+                INNER JOIN rooms ON orders.room_id = rooms.id
+                ";
     
-        $query = 'SELECT id , order_date, total_amount, notes, room_id, status
-                  FROM orders
-                  LIMIT :limit
-                  OFFSET :offset';
+        $whereClause = "";
+        if (isset($filters['user'])) {
+            $whereClause .= " WHERE users.username = '{$filters['user']}'";
+        }
+        if (isset($filters['date_from'])) {
+            $whereClause .= ($whereClause ? " AND" : " WHERE") . " orders.order_date >= '{$filters['date_from']}'";
+        }
+        if (isset($filters['date_to'])) {
+            $whereClause .= ($whereClause ? " AND" : " WHERE") . " orders.order_date <= '{$filters['date_to']}'";
+        }
     
-        $stmt = $this->connection->prepare($query);
-        $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
-        $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+        $query .= $whereClause;
+        $statement = $this->connection->prepare($query);
     
         try {
-            $stmt->execute();
-            $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            return $res;
+            $statement->execute();
+            $checks = $statement->fetchAll(PDO::FETCH_ASSOC);
+            return $checks;
         } catch (PDOException $e) {
-            // Log the error instead of echoing
-            error_log("Error fetching orders: " . $e->getMessage());
-            return false; 
+            return "Error: " . $e->getMessage();
         }
     }
 }
