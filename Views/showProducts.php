@@ -10,11 +10,15 @@ if(!is_null($_SESSION) && $_SESSION['role'] === 'user')
 {
     header('Location:home.php');
 }
-$errors='';
-if(isset($_GET['errors'])){
-  $errors =  $_GET['errors'];
-}
+$error='';
+$success='';
 
+if(isset($_GET['error'])){
+  $error =  $_GET['error'];
+}
+if(isset($_GET['success'])){
+  $success =  $_GET['success'];
+}
 $username = $_SESSION['username'];
 $role = $_SESSION['role'];
 $image = $_SESSION['image'];
@@ -50,12 +54,18 @@ $count = $count[0]['count'];
         user_navbar($username,$image,$role);
   ?>
   <?php
-  if (!empty($errors)) {
+  if (!empty($error)) {
     echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">';
-    echo '<strong>' . $errors . '</strong>';
+    echo '<strong>' . $error . '</strong>';
     echo '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>';
     echo '</div>';
   }
+  if($success){
+    echo '<div class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong>Success !</strong> Product deleted successfully !
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>';
+   }
   ?>
   <div class="container">
     <div class="d-flex justify-content-end mb-3">
@@ -65,7 +75,7 @@ $count = $count[0]['count'];
     <div class="table-responsive">
       <?php
       
-        display_table($products,$currPage, ceil(($count+1)/6),$errors);
+        display_table($products,$currPage, ceil(($count+1)/6));
        
       ?>
     </div>
