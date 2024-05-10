@@ -58,7 +58,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST"&& empty($_POST['id'])) {
 
     if (empty($_POST['stock'])&$_POST['stock']!=0) {
         $errors['stock'] = "stock is required";
-    } 
+    } elseif ($_POST['stock '] < 0) {
+        $errors['stock '] = "Stock cannot be negative.";
+    }
     if (!empty($errors)) {
         $errors = json_encode($errors);
         header("Location: ../Views/productForm.php?errors={$errors}");
@@ -96,13 +98,18 @@ if ($_SERVER["REQUEST_METHOD"] === "POST"&& empty($_POST['id'])) {
     $price = $_POST['price'];
     if (empty($_POST['price'])) {
         $errors['price'] = "price is required";
-    }  elseif ($_POST['price'] < 0) {
+    } elseif ($_POST['price'] < 0) {
         $errors['price'] = "Price cannot be negative.";
     }
+
     $stock = $_POST['stock'];
+
     if (empty($_POST['stock'])&$_POST['stock']!=0) {
         $errors['stock'] = "stock is required";
-    } 
+    }  elseif ($_POST['stock '] < 0) {
+        $errors['stock '] = "Stock cannot be negative.";
+    }
+
     if (!empty($errors)) {
         $errors = json_encode($errors);
         header("Location: ../Views/productForm.php?id={$id}&action=edit&errors={$errors}");
