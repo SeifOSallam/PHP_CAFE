@@ -16,24 +16,19 @@ if(!is_null($_SESSION) && $_SESSION['role'] === 'admin')
 
 if (isset($_POST['start_date']) && isset($_POST['end_date'])) {
     $orders = getOrdersOnlyForUserDate($userID, $_POST['start_date'], $_POST['end_date']);
-    $count=0;
 } else {
     if(isset($_GET['page']))
     {
-       
-       $orders = getOrdersOnlyForUserWithPage($userID,$_GET['page']);
-       $count = $database->orderCount($userID);
+        $orders = getOrdersOnlyForUserWithPage($userID,$_GET['page']);
     }
     
     if(!isset($_GET['page']))
     {
         $orders = getOrdersOnlyForUserWithPage($userID,1);
-        $count = $database->orderCount($userID);
     }
     if (isset($_GET['details']) && $_GET['details'] === 'true' && isset($_GET['orderId'])) {
         $orderId = $_GET['orderId'];
         $orderDetails = getOrderDetailsByOrderId($orderId);
-       
     }
 }
 
@@ -88,7 +83,6 @@ if (isset($_POST['start_date']) && isset($_POST['end_date'])) {
         <table class="table">
         <thead class="thead-dark">
             <tr>
-               <th scope="col">Order</th>
                 <th scope="col">Order Date</th>
                 <th scope="col">Total Price</th>
                 <th scope="col">Status</th>
@@ -98,7 +92,6 @@ if (isset($_POST['start_date']) && isset($_POST['end_date'])) {
         <tbody>
             <?php foreach ($orders as $order): ?>
                 <tr>
-                    <td><?php echo $order['id']; ?></td>
                     <td><?php echo $order['order_date']; ?></td>
                     <td><?php echo $order['total_amount']; ?></td>
                     <td><?php echo $order['status']; ?></td>
@@ -120,11 +113,10 @@ if (isset($_POST['start_date']) && isset($_POST['end_date'])) {
 <div class="container">
     <div class="row">
         <?php if (!empty($orderDetails)): ?>
-            <p><strong>Order:</strong> <?php echo $orderId; ?></p>
             <?php foreach ($orderDetails as $detail): ?>
                 <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
                     <div class="card">
-                        <img src="../assets/<?php echo $detail['image']; ?>" alt="<?php echo $detail['product_name']; ?>" style="width:100%; height: 200px;">
+                        <img src="../assets/images/<?php echo $detail['image']; ?>" alt="<?php echo $detail['product_name']; ?>" style="width:100%; height: 200px;">
                         <div class="container">
                             <h4><b><?php echo $detail['product_name']; ?></b></h4>
                             <p><strong>Quantity:</strong> <?php echo $detail['quantity']; ?></p>
@@ -144,14 +136,12 @@ if (isset($_POST['start_date']) && isset($_POST['end_date'])) {
     </div>
     <div class="inline-block text-center">
                 <?php
-               $perPage = 6;
-               $totalPages = ceil($count / $perPage);
-               
-               for ($i = 1; $i <= $totalPages; $i++) {
-                   echo "<a href='?page=$i' class='btn btn-primary mx-2'>$i</a>";
-               }
+                for ($i=1 ; $i <= (20/6)+1; $i++)
+                {
+                    echo "<a href='?page=$i' class='btn btn-primary mx-2'>$i</a>";
+                }
                 ?>
-                </div>
+    </div>
 </div>
 <script>
     function toggleOrderDetails(orderId) {

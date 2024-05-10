@@ -17,12 +17,6 @@ if(!isset($_GET['page']))
 $user_id = $_SESSION['id'];
 $role = $_SESSION['role'];
 
-if($role !== 'admin' && !is_null($_SESSION))
-{
-    header("Location:home.php");
-    exit();
-}
-
 $cartItems = $database->getUserItems('cart',$user_id);
 
 $rooms = $database->select('rooms');
@@ -53,28 +47,11 @@ $count = $count[0]['count'];
 <body>
     
     <?php user_navbar($_SESSION['username'],$_SESSION['image'],$_SESSION['role']);?>
-    <?php 
-
-if(isset($_GET['error'])) 
-{
-    echo '<div class="alert alert-warning alert-dismissible fade show" role="alert">
-            <strong>Error !  </strong>  '.$_GET['error'].'
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>';
-}
-if(isset($_GET['success'])) 
-{
-    echo '<div class="alert alert-success alert-dismissible fade show" role="alert">
-            <strong>Success !</strong> Order Placed successfully !
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>';
-}
-    ?>
-
+    
     <div class="wrapper row">
         <div class="col-4">
             <div class="row text-center p-4">
-                <!-- <h1 class='mt-5 text-ceneter'>Cart</h1> -->
+                <h1 class='mt-5 text-ceneter'>Orders</h1>
                 
                 <?php
                 echo '<div class="d-flex flex-column justify-content-center ">';
@@ -92,14 +69,13 @@ if(isset($_GET['success']))
 
 <div>
     <?php
-                    echo '<form class="form-inline" action="../Controllers/confirm_order.php?user_id='.$user_id.'&total='.$total.'" method="post">';
+                    echo '<form action="../Controllers/confirm_order.php?user_id='.$user_id.'&total='.$total.'" method="post">';
 
                     echo '<div class="d-flex flex-column">';
-                    
                     echo '<label for="user">Choose user : </label>';
 
                     // Users
-                    echo '<select class="form-select w-50 m-auto" id="user" name="user">';
+                    echo '<select id="user" name="user">';
                     foreach($users as $user)
                     {
                         echo'<option value="'.$user['id'].'">'.$user['username'].'</option>';
@@ -107,9 +83,9 @@ if(isset($_GET['success']))
                     echo '</select>';
 
                     echo'
-                    <input  class="form-control w-50 bg-white m-auto my-4" id="total" name="total"  value="Toatal : '.$total.'" class="my-4" disabled />
+                    <input id="total" name="total"  value="Toatal : '.$total.'" class="my-4" disabled />
                     <label for="room_no">Room No:</label>
-                    <select class="form-select w-50 m-auto" id="room_no" name="room_no">';
+                    <select id="room_no" name="room_no">';
                     
                     // Rooms
                     foreach($rooms as $room)
@@ -119,24 +95,24 @@ if(isset($_GET['success']))
                     
                     echo'
                     </select>
-                    <p class="mt-3">Notes</p>
-                    <textarea  class="form-control" id="note" name="note" rows="4" cols="40" placeholder="Add note here"></textarea>
-                    <button type="submit" class="btn btn-primary m-auto w-50 my-3">Confirm</button>';
+                    <p>Notes</p>
+                    <textarea id="note" name="note" rows="4" cols="40" placeholder="Add note here"></textarea>
+                    <button type="submit" class="btn btn-primary my-3">Confirm</button>';
 
-                    echo '</div> </form>';
+                    echo '</div> </form>'
                     ?>
                 </div>
             </div>
         </div>
 
         <div class="col-8">
-            <div class='row'>
+            <div class='row mt-5'>
                 <!-- Products -->
                 <div class="row">
-                    <?php
+                    <?php 
                     foreach ($products as $product)
                     {
-                    product_card($user_id,$role,$product['id'],$product['image'],$product['name'],$product['category'],$product['price'],$product['stock']);
+                    product_card($user_id,$role,$product['id'],$product['image'],$product['name'],$product['category'],$product['price']);
                     }
                     ?>
                 </div>

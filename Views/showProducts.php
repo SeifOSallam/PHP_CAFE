@@ -10,19 +10,15 @@ if(!is_null($_SESSION) && $_SESSION['role'] === 'user')
 {
     header('Location:home.php');
 }
-$errors='';
-if(isset($_GET['errors'])){
-  $errors =  $_GET['errors'];
-}
 
 $username = $_SESSION['username'];
 $role = $_SESSION['role'];
 $image = $_SESSION['image'];
 $currPage = empty($_GET['page'])? 1 : $_GET['page'];
 $products = selectProduct($currPage);
-$filterKeys = ['id', 'category_id'];
+$filterKeys = ['id', 'category_id', 'stock'];
 
-$columnNames = array('Product', 'Price', 'Image','stock');
+$columnNames = array('Product', 'Price', 'Image');
 $count = getProductsCount();
 $count = $count[0]['count'];
 ?>
@@ -55,11 +51,7 @@ $count = $count[0]['count'];
     <h2 class="text-center mb-4">All Products</h2> 
     <div class="table-responsive">
       <?php
-          if ($errors){
-            echo "<div style='color: red;'>".$errors."</div>";
-          }
-        display_table($products,$currPage, ceil(($count+1)/6),$errors);
-       
+        display_in_table($products, $columnNames, 3, $filterKeys,"../Controllers/product.php","productForm.php", $currPage, ceil(($count+1)/6));
       ?>
     </div>
   </div>

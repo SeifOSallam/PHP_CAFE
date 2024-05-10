@@ -3,10 +3,6 @@ include "../Controllers/category.php";
 include "../Controllers/product.php";
 include "../Views/base.php";
 
-session_start();
-$username = $_SESSION['username'];
-$role = $_SESSION['role'];
-$image = $_SESSION['image'];
 if(isset($_GET['errors'])){
     $errors = json_decode($_GET["errors"], true);
 }
@@ -14,8 +10,7 @@ if(isset($_GET['errors'])){
 if(isset($_GET['old_data'])){
     $old_data = json_decode($_GET["old_data"], true);
 }
-if(isset($_GET['action']) && $_GET['action'] === "edit"){
-  $product_id=$_GET['id'];
+if(isset($_GET['action']) && $_GET['action']="edit"){
   $product = getOneProduct($_GET['id']) ;
 }
 $categories = selectCategories();
@@ -31,82 +26,47 @@ $categories = selectCategories();
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   
   <style>
-      
-  .container {
-    position: relative;
-    margin-top: 50px;
-  }
-  
-  .form-container {
-    max-width: 600px;
-    margin: auto;
-    padding: 20px;
-    background-color: #f8f9fa;
-    border-radius: 10px;
-    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
-  }
 
-  .form-container h2 {
-    text-align: center;
-    margin-bottom: 30px;
-  }
+    .container {
+      position: relative;
+      margin-top: 90px; 
+      height: 100vh;
+    }
+    .form-container {
+      max-width: 600px;
+      margin: auto;
+      padding: 30px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.2);
+    }
+    .form-container h2 {
+      text-align: center;
+    }
+    .bg-image {
+      background-image: url('your-image.jpg');
+      background-size: cover;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      filter: blur(5px); 
+    }
+    .modal-dialog.modal-dialog-centered {
+        display: flex;
+        align-items: center;
+        min-height: calc(100% - 3.5rem); 
+    }
 
-  .form-group label {
-    font-weight: bold;
-  }
-
-  .form-group input[type="text"],
-  .form-group input[type="number"],
-  .form-group select {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 20px;
-    height: 50px;
-    border: 1px solid #ced4da;
-    border-radius: 5px;
-  }
-
-  .form-group input[type="file"] {
-    border: none;
-    margin-bottom: 10px;
-  }
-
-  .form-group button[type="submit"],
-  .form-group button[type="reset"] {
-    width: 49%;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-
-  .form-group button[type="submit"] {
-    background-color: #007bff;
-    color: #fff;
-  }
-
-  .form-group button[type="reset"] {
-    background-color: #6c757d;
-    color: #fff;
-  }
-
-  .form-group .text-danger {
-    margin-top: 5px;
-  }
-
-  .form-group input[type="text"][name="price"],
-  .form-group input[type="number"][name="stock"] {
-    width: 30%; 
-  }
-</style>
-
-
- 
+    .modal-content {
+        margin: auto;
+    }
+  </style>
 </head>
 <body>
-<?php require '../Components/navbar.php';
-      user_navbar($username,$image,$role);
-?>
+<?php require '../Components/navbar.php';?>
 <div class="container">
   <div class="bg-image"></div>
   <div class="form-container">
@@ -120,7 +80,6 @@ $categories = selectCategories();
       <div class="form-group">
         <label for="quantity">Price:</label>
         <input type="text" id="quantity" name="price" <?php if(!empty($product)){echo 'value="'.$product[0]["price"].'"';}?>>
-        <?php if (!empty($errors['price'])) echo "<div class='text-danger'>{$errors['price']}</div>"; ?> 
       </div>
      <div class="form-group row">
         <label for="productCategory" class="col-sm-3 col-form-label">Category:</label>
@@ -134,16 +93,14 @@ $categories = selectCategories();
               <?php endif; ?>
            <?php endforeach; ?>
             </select>
-          <?php if (!empty($errors['category'])) echo "<div class='text-danger'>{$errors['category']}</div>"; ?> 
         </div>
         <div class="col-sm-2">
-          <button type="button" class="btn btn-primary  btn-sm" data-toggle="modal" data-target="#addCategoryModal">Add Category</button>
+          <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#addCategoryModal">Add Category</button>
        </div>
     </div>
     <div class="form-group">
         <label for="quantity">Stock:</label>
         <input type="number" id="quantity" name="stock" min="0" <?php if(!empty($product)){echo 'value="'.$product[0]["stock"].'"';}?>>
-        <?php if (!empty($errors['stock'])) echo "<div class='text-danger'>{$errors['stock']}</div>"; ?> 
     </div>
       <div class="form-group">
         <label for="productImage">Product Picture:</label>
@@ -163,7 +120,7 @@ $categories = selectCategories();
   </div>
 </div>
 <div class="modal fade" id="addCategoryModal" tabindex="-1" role="dialog" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="addCategoryModalLabel">Add Category</h5>
@@ -176,29 +133,19 @@ $categories = selectCategories();
                     <div class="form-group">
                         <label for="categoryName">Category Name:</label>
                         <input type="text" class="form-control" id="categoryName" name="categoryName">
-                        <input type="hidden" id="hiddenImageName" name="product_id" value="<?php if(!empty($product)){echo  $product_id;} ?>">
                         <?php if (!empty($errors['category'])): ?>
                             <div class="text-danger"><?php echo $errors['category']; ?></div>
                         <?php endif; ?>
-                       
                     </div>
                     
-                    <button type="submit" class="btn btn-primary"> Add</button>
+                    <button type="submit" class="btn btn-primary">Add</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
 
-
 <script>
-
-$(document).ready(function(){
-  <?php if (!empty($errors['category'])): ?>
-    $('#addCategoryModal').modal('show');
-  <?php endif; ?>
-});
-
 function displayFileName(input) {
     var fileName = input.files[0].name;
     document.getElementById('image').style.display =  'none';
