@@ -384,11 +384,11 @@ class Database {
             return array(); // Return an empty array in case of an error
         }
     }
-    public function resetPassword($username, $newPassword) {
-        $query = "UPDATE users SET password = :newPassword WHERE username = :username";
+    public function resetPassword($email, $newPassword) {
+        $query = "UPDATE users SET password = :newPassword WHERE email = :email";
         $statement = $this->connection->prepare($query);
         $statement->bindParam(':newPassword', $newPassword);
-        $statement->bindParam(':username', $username);
+        $statement->bindParam(':email', $email);
 
         try {
             $statement->execute();
@@ -398,20 +398,20 @@ class Database {
             return false;
         }
     }
-        public function checkUsernameExists($username) {
+        public function checkEmailExists($email) {
         try {
-            $stmt = $this->connection->prepare("SELECT COUNT(*) FROM users WHERE username = ?");
-            $stmt->execute([$username]);
+            $stmt = $this->connection->prepare("SELECT COUNT(*) FROM users WHERE email = ?");
+            $stmt->execute([$email]);
             $count = $stmt->fetchColumn();
             return ($count > 0); 
         } catch(PDOException $e) {
             return false;
         }
     }
-    public function getCurrentPassword($username) {
+    public function getCurrentPassword($email) {
         try {
-            $stmt = $this->connection->prepare("SELECT password FROM users WHERE username = ?");
-            $stmt->execute([$username]);
+            $stmt = $this->connection->prepare("SELECT password FROM users WHERE email = ?");
+            $stmt->execute([$email]);
             $password = $stmt->fetchColumn();
             return $password;
         } catch(PDOException $e) {
@@ -574,6 +574,95 @@ class Database {
             return "Error: " . $e->getMessage();
         }
     }
+    public function deleteOrdersForUser($user_id) {
+        try {
+            $stmt = $this->connection->prepare("DELETE FROM orders WHERE user_id = ?");
+            $stmt->execute([$user_id]);
+            // you can check if any rows were affected
+            // $rowCount = $stmt->rowCount();
+            // return $rowCount;
+        } catch (PDOException $e) {
+            throw new Exception("Error deleting orders for user: " . $e->getMessage());
+        }
+    }
+    public function comparePassword($email, $password)
+    {
+        try {
+            $query = "SELECT password FROM users WHERE email = :email";
+            $statement = $this->connection->prepare($query);
+            $statement->bindParam(':email', $email, PDO::PARAM_STR);
+            $statement->execute();
+            $result = $statement->fetch(PDO::FETCH_ASSOC);
+            
+            if ($result) {
+                if ($result['password'] === $password) {
+                    return true; 
+                } else {
+                    return false; 
+                }
+            } else {
+                return false; 
+            }
+        } catch (PDOException $e) {
+            throw new Exception($e->getMessage());
+        }
+    }    
+    public function getUserByUsername($username) {
+        $stmt = $this->connection->prepare("SELECT * FROM " . DB_TABLE . " WHERE username = ?");
+        $stmt->execute([$username]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    public function getUserByEmail($email) {
+        $stmt = $this->connection->prepare("SELECT * FROM " . DB_TABLE . " WHERE email = ?");
+        $stmt->execute([$email]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    // public function checkEmailExists($email) {
+    //     try {
+    //         $stmt = $this->connection->prepare("SELECT COUNT(*) FROM users WHERE email = ?");
+    //         $stmt->execute([$email]);
+    //         $count = $stmt->fetchColumn();
+    //         return ($count > 0); 
+    //     } catch(PDOException $e) {
+    //         return false;
+    //     }
+   // }
+    // public function getCurrentPassword($email) {
+    //     try {
+    //         $stmt = $this->connection->prepare("SELECT password FROM users WHERE email = ?");
+    //         $stmt->execute([$email]);
+    //         $password = $stmt->fetchColumn();
+    //         return $password;
+    //     } catch(PDOException $e) {
+    //         return null;
+    //     }
+    // }
+    public function findOneUserByEmail($email) {
+        try {
+            $stmt = $this->connection->prepare("SELECT * FROM users WHERE email = ?");
+            $stmt->execute([$email]);
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            throw new PDOException($e->getMessage());
+        }
+        }
+        public function selectOne($table, $columns = '*', $where = '', $params = []) {
+            $query = "SELECT $columns FROM $table";
+            if (!empty($where)) {
+                $query .= " WHERE $where";
+            }
+            $stmt = $this->connection->prepare($query);
+            $stmt->execute($params);
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        }
+        public function selectAllRooms() {
+            try {
+                $stmt = $this->connection->query("SELECT id, room_number FROM rooms");
+                return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            } catch (PDOException $e) {
+                throw new Exception("Failed to fetch room numbers: " . $e->getMessage());
+            }
+        }
 }
 
 $database = Database::getInstance();

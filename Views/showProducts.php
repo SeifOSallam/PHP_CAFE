@@ -10,15 +10,11 @@ if(!is_null($_SESSION) && $_SESSION['role'] === 'user')
 {
     header('Location:home.php');
 }
-$error='';
-$success='';
+$errors='';
+if(isset($_GET['errors'])){
+  $errors =  $_GET['errors'];
+}
 
-if(isset($_GET['error'])){
-  $error =  $_GET['error'];
-}
-if(isset($_GET['success'])){
-  $success =  $_GET['success'];
-}
 $username = $_SESSION['username'];
 $role = $_SESSION['role'];
 $image = $_SESSION['image'];
@@ -29,7 +25,6 @@ $filterKeys = ['id', 'category_id'];
 $columnNames = array('Product', 'Price', 'Image','stock');
 $count = getProductsCount();
 $count = $count[0]['count'];
-
 ?>
 
 <!DOCTYPE html>
@@ -50,23 +45,9 @@ $count = $count[0]['count'];
 </head>
 <body>
     
-  <?php require '../Components/navbar.php';
-        user_navbar($username,$image,$role);
-  ?>
-  <?php
-  if (!empty($error)) {
-    echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">';
-    echo '<strong>' . $error . '</strong>';
-    echo '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>';
-    echo '</div>';
-  }
-  if($success){
-    echo '<div class="alert alert-success alert-dismissible fade show" role="alert">
-            <strong>Success !</strong> Product deleted successfully !
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>';
-   }
-  ?>
+<?php require '../Components/navbar.php';
+      user_navbar($username,$image,$role);
+?>
   <div class="container">
     <div class="d-flex justify-content-end mb-3">
       <a href="../Views/productForm.php" class="btn btn-primary">Add Product</a>
@@ -74,19 +55,16 @@ $count = $count[0]['count'];
     <h2 class="text-center mb-4">All Products</h2> 
     <div class="table-responsive">
       <?php
-      
-        display_table($products,$currPage, ceil(($count+1)/6));
+          if ($errors){
+            echo "<div style='color: red;'>".$errors."</div>";
+          }
+        display_table($products,$currPage, ceil(($count+1)/6),$errors);
        
       ?>
     </div>
   </div>
 
-<script>
-    document.getElementById("closeErrorAlert").addEventListener("click", function() {
-        document.getElementById("errorAlert").remove();
-    });
-</script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
