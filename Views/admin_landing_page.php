@@ -134,7 +134,6 @@ if(isset($_GET['success']))
                 <!-- Products -->
                 <div class="row">
                     <?php
-                    var_dump($products); 
                     foreach ($products as $product)
                     {
                     product_card($user_id,$role,$product['id'],$product['image'],$product['name'],$product['category'],$product['price'],$product['stock']);
