@@ -44,7 +44,7 @@
       user_navbar($username,$image,$role);
 ?>
 
-
+ 
   <?php if (!empty($error_message)) : ?>
       <div class="container mt-5">
           <div class="alert alert-danger" role="alert">
@@ -52,6 +52,12 @@
           </div>
       </div>
   <?php endif; ?>
+  <?php
+  if(!empty($error_message))
+  {
+  header("Location: ../Views/admin_home.php?error={$error_message}");
+  }
+  ?>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
