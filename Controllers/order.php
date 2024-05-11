@@ -32,6 +32,7 @@ function updateOrder($id, $status) {
 function CancelOrder($id){
     global $database;
     $database->update("orders", $id, "status='Cancelled'");
+    $database->restockProducts($id);
 }
 function getOrderDetailsByOrderId($orderId){
     global $database;

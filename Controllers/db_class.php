@@ -669,6 +669,34 @@ class Database {
                 throw new Exception("Failed to fetch room numbers: " . $e->getMessage());
             }
         }
+    public function getOrderProductsIds($orderId) {
+        $query = "SELECT p.id, oi.quantity
+        FROM products p
+        INNER JOIN order_items oi 
+        ON p.id = oi.product_id
+        INNER JOIN orders o
+        ON oi.order_id = {$orderId}
+        GROUP BY p.id
+        ;";
+
+        $stmt = $this->connection->prepare($query);
+        try
+        {
+            $stmt->execute();
+            $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $res;
+        }
+        catch (PDOException $e)
+        {
+            echo $e->getMessage();
+        }
+    }
+    public function restockProducts($orderId) {
+        $products = $this->getOrderProductsIds($orderId);
+        foreach ($products as $product) {
+            $this->update('products', $product['id'], "stock = stock + {$product['quantity']}");
+        }
+    }
 }
 
 $database = Database::getInstance();
