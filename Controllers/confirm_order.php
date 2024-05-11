@@ -69,7 +69,9 @@ foreach ($cartItems as $item)
     $product_id = (int)$item['product_id'];
     $quantity = $item['quantity'];
     $product_price = (float)$item['product_price'];
-
+    
+    $database->insert('order_items','product_id,order_id,quantity,product_price',"$product_id,$order_id,$quantity,$product_price");
+    
     $product = $database->getProductById($product_id);
 
     $quantity = $product[0]['stock'] - $quantity;
@@ -77,7 +79,6 @@ foreach ($cartItems as $item)
 
     $database->update('products',$product[0]['id'],'stock='.$quantity);
 
-    $database->insert('order_items','product_id,order_id,quantity,product_price',"$product_id,$order_id,$quantity,$product_price");
 
     $database->deleteItem('cart',$product_id,$user_id);
 }
