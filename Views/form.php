@@ -6,6 +6,11 @@ require_once '../Views/base.php';
 
 $errors = [];
 
+session_start();
+$username = $_SESSION['username'];
+$role = $_SESSION['role'];
+$image = $_SESSION['image'];
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($_POST['username'])) {
         $errors['username'] = 'Username is required';
@@ -159,23 +164,13 @@ if (empty($errors)) {
             margin-bottom: 10px;
         }
 
-        .navbar {
-            background-color: #007bff;
-        }
-
-        .navbar-brand {
-            color: #fff;
-        }
     </style>
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark">
-        <div class="container">
-            <a class="navbar-brand" href="../Views/admin_home.php">All Users</a>
-        </div>
-    </nav>
-
+<?php require '../Components/navbar.php';
+      user_navbar($username,$image,$role);
+?>
     <div class="container">
         <div class="form-container">
             <h2 class="text-center mb-4">Add User</h2>
