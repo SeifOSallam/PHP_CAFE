@@ -4,6 +4,11 @@ require_once '../Controllers/db_class.php';
 
 $errors = [];
 
+session_start();
+$username = $_SESSION['username'];
+$role = $_SESSION['role'];
+$image = $_SESSION['image'];
+
 if(isset($_GET['id'])) {
     $user_id = (int)$_GET['id'];
 } else {
@@ -92,7 +97,6 @@ try {
 }
 
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -100,27 +104,24 @@ try {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Update User</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
     <style>
-        body {
+         body {
             background-color: #f8f9fa;
             font-family: Arial, sans-serif;
         }
 
-        .navbar {
-            background-color: #007bff;
-        }
-
-        .navbar-brand {
-            color: #fff;
-        }
-
         .form-container {
-            background-color: #fff;
+            max-width: 500px;
+            margin: 50px auto;
             border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            padding: 40px;
-            margin-top: 20px;
+            padding: 30px; */
+            background-color: #fff;
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
         }
 
         .form-control {
@@ -136,27 +137,27 @@ try {
         .btn-primary {
             border-radius: 5px;
             background-color: #007bff;
-            border: none;
+            border-color: #007bff;
+            transition: background-color 0.3s ease;
         }
 
         .btn-primary:hover {
             background-color: #0056b3;
+            border-color: #0056b3;
         }
 
         .error-message {
             color: red;
             font-weight: bold;
+            margin-top: -10px;
+            margin-bottom: 10px;
         }
     </style>
 </head>
-
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark">
-        <div class="container">
-            <a class="navbar-brand" href="../Views/admin_home.php">All Users</a>
-        </div>
-    </nav>
-
+<?php require '../Components/navbar.php';
+      user_navbar($username,$image,$role);
+?>
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-6">
