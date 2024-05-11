@@ -11,7 +11,7 @@ if(is_null($_SESSION['id']))
 
 if(!is_null($_SESSION['role']) && $_SESSION['role'] === 'admin')
 {
-    header('Location:admin_landing_page.php');
+    header('Location:admin_landing_page.php?error=Not authorized!!');
 }
 
 if(isset($_GET['page']))

@@ -19,7 +19,7 @@ $role = $_SESSION['role'];
 
 if($role !== 'admin' && !is_null($_SESSION))
 {
-    header("Location:home.php");
+    header("Location:home.php?error=Not Authorized!!!");
     exit();
 }
 
