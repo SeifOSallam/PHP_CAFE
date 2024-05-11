@@ -4,7 +4,7 @@ require_once '../Controllers/db_class.php';
 
 session_start();
 
-if (isset($_SESSION['id']) && !is_null($_SESSION['id'])) {
+if (!empty($_SESSION['id'])) {
     header("location: ./home.php");
     exit(); 
 }
