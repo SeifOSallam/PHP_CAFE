@@ -61,9 +61,9 @@ function displayOrdersTable($data, $users, $currentPage, $totalPages, $filters){
             echo "<span class='text-danger fw-bold'>Cancelled</span>";
         }
         else if ($order['status'] != 'Done') {
-            echo "<input
+            echo "<button
             class='btn btn-success' 
-            type='submit' name='status' value='Done'>";
+            type='submit' name='status' value='Done'>Deliver</button>";
         }
         else {
             echo "<span class='text-success fw-bold'>Delivered</span>";
