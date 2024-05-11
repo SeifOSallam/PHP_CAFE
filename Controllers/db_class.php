@@ -576,11 +576,13 @@ class Database {
     }
     public function deleteOrdersForUser($user_id) {
         try {
+  
+            $stmt = $this->connection->prepare("DELETE FROM order_items WHERE order_id IN (SELECT id FROM orders WHERE user_id = ?)");
+            $stmt->execute([$user_id]);
+    
             $stmt = $this->connection->prepare("DELETE FROM orders WHERE user_id = ?");
             $stmt->execute([$user_id]);
-            // you can check if any rows were affected
-            // $rowCount = $stmt->rowCount();
-            // return $rowCount;
+
         } catch (PDOException $e) {
             throw new Exception("Error deleting orders for user: " . $e->getMessage());
         }
