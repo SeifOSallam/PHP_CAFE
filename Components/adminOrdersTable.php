@@ -57,15 +57,17 @@ function displayOrdersTable($data, $users, $currentPage, $totalPages, $filters){
         echo "<input type='hidden' name='user' value='{$userparam}'>";
         echo "<input type='hidden' name='date_from' value='{$datefromparam}'>";
         echo "<input type='hidden' name='date_to' value='{$datetoparam}'>";
-        echo "<select class='form-select w-75 mx-auto' name='status' onchange='this.form.submit()'>";
-
-        $statuses = array("Out for delivery", "Processing", "Done", "Cancelled");
-
-        foreach ($statuses as $status) {
-            echo "<option class='text-center' value='{$status}'" . ($status == $order['status'] ? ' selected' : '') . ">{$status}</option>";
+        if ($order['status'] == 'Cancelled') {
+            echo "<span class='text-danger fw-bold'>Cancelled</span>";
         }
-
-        echo "</select>";
+        else if ($order['status'] != 'Done') {
+            echo "<button
+            class='btn btn-success' 
+            type='submit' name='status' value='Done'>Deliver</button>";
+        }
+        else {
+            echo "<span class='text-success fw-bold'>Delivered</span>";
+        }
         echo "</form>";
         echo "</td>";
         echo 

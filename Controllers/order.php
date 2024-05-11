@@ -44,7 +44,7 @@ function getOrdersCount($filters) {
 if (isset($_GET['cancelled'])) {
     $cancelledOrderId = $_GET['cancelled'];
     CancelOrder($cancelledOrderId);
-    header("Location: ../Views/showOrdersAdmin.php");
+    header("Location: ../Views/showOrders.php");
 }
 
 
