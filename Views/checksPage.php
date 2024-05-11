@@ -42,7 +42,7 @@
             if (!count($data)) {
                 echo "
                 <div class='container w-50 mx-auto mt-5'>
-                    <h1 class='text-center'>THERE IS NO DATA</h1>
+                    <h1 class='text-center'>THERE ARE NO CHECKS</h1>
                 </div>
                 ";
             }
