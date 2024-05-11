@@ -76,6 +76,15 @@ if (isset($_POST['start_date']) && isset($_POST['end_date'])) {
 <?php require '../Components/navbar.php';
       user_navbar($_SESSION['username'],$_SESSION['image'],$_SESSION['role']);
 ?>
+<?php
+if (empty($orders)) {
+    echo '<div class="alert alert-warning alert-dismissible fade show" role="alert">';
+    echo '<strong>' . "No orders in this date" . '</strong>';
+    echo '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>';
+    echo '</div>';
+}
+?>
+
 
 <div class="container text-center container-margin-top"> 
     <form method="post" action="showOrders.php">
@@ -164,5 +173,6 @@ if (isset($_POST['start_date']) && isset($_POST['end_date'])) {
     }
 </script>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 </html>
