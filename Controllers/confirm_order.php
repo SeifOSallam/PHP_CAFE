@@ -70,6 +70,8 @@ foreach ($cartItems as $item)
     $quantity = $item['quantity'];
     $product_price = (float)$item['product_price'];
 
+    $database->insert('order_items','product_id,order_id,quantity,product_price',"$product_id,$order_id,$quantity,$product_price");
+   
     $product = $database->getProductById($product_id);
 
     $quantity = $product[0]['stock'] - $quantity;
