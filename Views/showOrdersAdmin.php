@@ -57,14 +57,13 @@
 </head>
 <body>
 <?php 
-    displayOrdersTable($orders, $users, $currPage, $totalPages, $filters);
-    if (!count($orders)) {
-        echo "
-        <div class='container w-50 mx-auto mt-5'>
-            <h1 class='text-center'>THERE ARE NO ORDERS</h1>
-        </div>
-        ";
+    if (empty($orders)) {
+        echo '<div class="alert alert-warning alert-dismissible fade show" role="alert">';
+        echo '<strong>' . "No orders found" . '</strong>';
+        echo '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>';
+        echo '</div>';
     }
+    displayOrdersTable($orders, $users, $currPage, $totalPages, $filters);
 ?>
 
 

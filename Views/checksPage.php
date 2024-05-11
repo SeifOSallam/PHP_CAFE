@@ -38,14 +38,14 @@
 </head>
 <body>
         <?php 
-            displayChecksTable($data, $users, $currPage, floor((count($data)/6)+1), $filters);
-            if (!count($data)) {
-                echo "
-                <div class='container w-50 mx-auto mt-5'>
-                    <h1 class='text-center'>THERE ARE NO CHECKS</h1>
-                </div>
-                ";
+            if (empty($data)) {
+                echo '<div class="alert alert-warning alert-dismissible fade show" role="alert">';
+                echo '<strong>' . "No checks found" . '</strong>';
+                echo '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>';
+                echo '</div>';
             }
+            displayChecksTable($data, $users, $currPage, floor((count($data)/6)+1), $filters);
+            
         ?>
     
 </body>
