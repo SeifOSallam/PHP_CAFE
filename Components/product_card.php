@@ -34,14 +34,14 @@ function product_card($user_id,$role,$product_id, $img, $name, $category, $price
                 <span class="txt">Order Now</span>
               </span>
             </a>';
-    else if ((int)$stock == 0 || $role === 'user')
+    else if ((int)$stock == 0 && $role === 'user')
     echo'    <a class="cart" href="../Views/home.php?error=Can not add out of stock item">
               <span class="price">'.$price.'$</span>
               <span class="add-to-cart">
                 <span class="txt">Order Now</span>
               </span>
             </a>';   
-    else if ((int)$stock == 0 || $role === 'admin')
+    else if ((int)$stock == 0 && $role === 'admin')
     echo'    <a class="cart" href="../Views/admin_landing_page.php?error=Can not add out of stock item">
               <span class="price">'.$price.'$</span>
               <span class="add-to-cart">
